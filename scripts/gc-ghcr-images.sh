@@ -123,11 +123,22 @@ active_apps_json="$(
 package_prefix="${repo}/"
 owner_path="$(api_owner_path)"
 
-packages_json="$(
-  gh api --paginate "${owner_path}/packages?package_type=container&per_page=100" \
+packages_api="${owner_path}/packages?package_type=container&per_page=100"
+echo "Listing GHCR packages from ${packages_api}" >&2
+api_error_file="$(mktemp)"
+if ! packages_json="$(
+  gh api --paginate "$packages_api" \
     --jq '[.[] | select(.name | startswith("'"${package_prefix}"'")) | {name: .name, visibility: .visibility}]' \
+    2>"$api_error_file" \
     | jq -s 'add'
-)"
+)"; then
+  echo "Failed to list GHCR packages for ${owner_type} ${owner}." >&2
+  cat "$api_error_file" >&2
+  rm -f "$api_error_file"
+  echo "For user-owned GHCR cleanup, configure a GHCR_GC_TOKEN repository secret with read:packages and delete:packages scopes, then rerun the workflow." >&2
+  exit 1
+fi
+rm -f "$api_error_file"
 
 stale_packages_json="$(
   jq -n \

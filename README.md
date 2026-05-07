@@ -105,6 +105,11 @@ pull requests never delete registry content.
 Use the manual workflow `GC stale app images` to list or delete GHCR packages
 whose app key is no longer present in `catalog/index.yml`.
 
+For user-owned packages, add repository secret `GHCR_GC_TOKEN` with
+`read:packages` for dry-runs and both `read:packages` and `delete:packages` for
+deletion. If the secret is absent, the workflow falls back to `GITHUB_TOKEN`,
+which may not be allowed to list user-level packages.
+
 Default mode is dry-run:
 
 ```text
