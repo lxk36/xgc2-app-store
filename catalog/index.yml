@@ -3,9 +3,9 @@ updatedAt: 2026-05-07
 apps:
   - key: xgc-ros1-runtime
     name: XGC ROS1 Runtime
-    version: 1.0.0
+    version: 1.1.0
     type: runtime
-    image: ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime:1.0.0
+    image: ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime:1.1.0
     app: ../apps/xgc-ros1-runtime/app.yml
     data: ../apps/xgc-ros1-runtime/data.yml
     compose: ../apps/xgc-ros1-runtime/docker-compose.yml
