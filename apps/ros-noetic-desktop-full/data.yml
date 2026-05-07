@@ -1,0 +1,36 @@
+name: ROS Noetic Desktop Full
+title: Official OSRF ROS Noetic desktop-full image
+additionalProperties:
+  key: ros-noetic-desktop-full
+  name: ROS Noetic Desktop Full
+  tags:
+    - Robot
+    - Simulation
+    - ROS1
+    - Base
+  shortDescEn: Official OSRF ROS Noetic desktop-full Docker image.
+  description:
+    en: Official OSRF ROS Noetic desktop-full image for generic ROS1 development and simulation. This app uses the upstream image directly and is not built by XGC2 CI.
+  type: base
+  crossVersionUpdate: true
+  limit: 0
+  website: https://wiki.ros.org/noetic
+  github: https://github.com/osrf/docker_images
+  document: https://hub.docker.com/r/osrf/ros
+  architectures:
+    - amd64
+    - arm64
+  batchInstallSupport: true
+  formFields:
+    - default: ros-noetic-desktop-full
+      envKey: CONTAINER_NAME
+      label:
+        en: Container name
+      required: true
+      type: text
+    - default: /tmp/ros_ws
+      envKey: ROS_WORKSPACE
+      label:
+        en: Workspace mount path
+      required: true
+      type: text

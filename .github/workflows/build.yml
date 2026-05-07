@@ -65,7 +65,13 @@ jobs:
           image="ghcr.io/${{ github.repository }}/${{ matrix.app }}"
           echo "version=${version}" >> "$GITHUB_OUTPUT"
           echo "image=${image,,}" >> "$GITHUB_OUTPUT"
+          if [[ -f "apps/${{ matrix.app }}/Dockerfile" ]]; then
+            echo "buildable=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "buildable=false" >> "$GITHUB_OUTPUT"
+          fi
       - uses: docker/build-push-action@v6
+        if: steps.meta.outputs.buildable == 'true'
         with:
           context: apps/${{ matrix.app }}
           file: apps/${{ matrix.app }}/Dockerfile
@@ -77,7 +83,11 @@ jobs:
           cache-from: type=gha,scope=${{ matrix.app }}
           cache-to: type=gha,mode=max,scope=${{ matrix.app }}
       - name: Smoke image
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.meta.outputs.buildable == 'true'
         run: |
           docker run --rm "${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}" bash -lc \
             'source /opt/ros/noetic/setup.bash && rosversion -d && roscore --help >/dev/null'
+      - name: Skip external image app
+        if: steps.meta.outputs.buildable == 'false'
+        run: |
+          echo "apps/${{ matrix.app }} has no Dockerfile; catalog metadata only."

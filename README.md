@@ -11,6 +11,8 @@ public deployment server is required until XGC needs remote, unattended CD.
 | App | Image | Purpose |
 | --- | --- | --- |
 | `xgc-ros1-runtime` | `ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime` | Curated ROS Noetic simulation toolkit for ROS1, MAVROS, VRPN, Gazebo Classic and core robot visualization. |
+| `px4-sitl-gazebo` | `ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo` | PX4 software-in-the-loop simulation toolkit for Gazebo Classic and ROS Noetic. |
+| `ros-noetic-desktop-full` | `osrf/ros:noetic-desktop-full` | Official OSRF ROS Noetic desktop-full image, referenced directly without XGC2 image hosting. |
 
 ## Catalog
 
@@ -24,11 +26,15 @@ The catalog points to app files in this repository and GHCR images built by CI.
 
 ## Image Build
 
-Only apps changed by a commit are built. The detector looks for changes under:
+Only buildable apps changed by a commit are built. The detector looks for
+changes under:
 
 ```text
 apps/<app-key>/
 ```
+
+An app without `apps/<app-key>/Dockerfile` is treated as an external-image app:
+CI keeps it in the catalog but skips image build and push.
 
 For pull requests, CI builds changed images without pushing. For `master`, CI
 pushes:

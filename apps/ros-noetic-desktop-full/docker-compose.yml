@@ -1,0 +1,16 @@
+services:
+  ros-noetic-desktop-full:
+    image: osrf/ros:noetic-desktop-full
+    container_name: ${CONTAINER_NAME}
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      DISPLAY: ${DISPLAY:-}
+      XAUTHORITY: ${XAUTHORITY:-}
+      ROS_WORKSPACE: ${ROS_WORKSPACE}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${ROS_WORKSPACE}:/home/ros_ws
+    stdin_open: true
+    tty: true
+    command: ["bash", "-lc", "source /opt/ros/noetic/setup.bash && sleep infinity"]

@@ -14,6 +14,32 @@ apps:
       - Simulation
       - ROS1
       - Toolkit
+  - key: px4-sitl-gazebo
+    name: PX4 SITL Gazebo
+    version: 1.0.0
+    type: simulation
+    image: ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo:1.0.0
+    app: ../apps/px4-sitl-gazebo/app.yml
+    data: ../apps/px4-sitl-gazebo/data.yml
+    compose: ../apps/px4-sitl-gazebo/docker-compose.yml
+    tags:
+      - Robot
+      - Simulation
+      - PX4
+      - Gazebo
+  - key: ros-noetic-desktop-full
+    name: ROS Noetic Desktop Full
+    version: 1.0.0
+    type: base
+    image: osrf/ros:noetic-desktop-full
+    app: ../apps/ros-noetic-desktop-full/app.yml
+    data: ../apps/ros-noetic-desktop-full/data.yml
+    compose: ../apps/ros-noetic-desktop-full/docker-compose.yml
+    tags:
+      - Robot
+      - Simulation
+      - ROS1
+      - Base
 tags:
   - key: Robot
     name: Robot
@@ -27,3 +53,12 @@ tags:
   - key: Toolkit
     name: Toolkit
     sort: 40
+  - key: PX4
+    name: PX4
+    sort: 50
+  - key: Gazebo
+    name: Gazebo
+    sort: 60
+  - key: Base
+    name: Base
+    sort: 70

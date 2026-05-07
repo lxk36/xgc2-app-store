@@ -1,0 +1,60 @@
+name: PX4 SITL Gazebo
+title: PX4 Gazebo Classic software-in-the-loop simulation
+additionalProperties:
+  key: px4-sitl-gazebo
+  name: PX4 SITL Gazebo
+  tags:
+    - Robot
+    - Simulation
+    - PX4
+    - Gazebo
+  shortDescEn: PX4 SITL, Gazebo Classic, MAVROS and ROS Noetic simulation tools.
+  description:
+    en: PX4 software-in-the-loop simulation toolkit collected from the XGC1 PX4 SITL workflow.
+  type: simulation
+  crossVersionUpdate: true
+  limit: 0
+  website: https://docs.px4.io
+  github: https://github.com/lxk36/xgc2-app-store
+  document: https://github.com/lxk36/xgc2-app-store/tree/master/apps/px4-sitl-gazebo
+  architectures:
+    - amd64
+  batchInstallSupport: true
+  formFields:
+    - default: px4-sitl-gazebo
+      envKey: CONTAINER_NAME
+      label:
+        en: Container name
+      required: true
+      type: text
+    - default: iris
+      envKey: PX4_VEHICLE
+      label:
+        en: PX4 vehicle
+      required: true
+      type: select
+      values:
+        - iris
+        - standard_vtol
+        - plane
+    - default: "true"
+      envKey: GAZEBO_GUI
+      label:
+        en: Gazebo GUI
+      required: true
+      type: select
+      values:
+        - "true"
+        - "false"
+    - default: "1"
+      envKey: PX4_SIM_SPEED_FACTOR
+      label:
+        en: Simulation speed factor
+      required: true
+      type: number
+    - default: /tmp/xgc_px4_logs
+      envKey: PX4_LOG_DIR
+      label:
+        en: Log directory
+      required: true
+      type: text

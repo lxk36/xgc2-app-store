@@ -1,0 +1,27 @@
+services:
+  px4-sitl-gazebo:
+    image: ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo:1.0.0
+    container_name: ${CONTAINER_NAME}
+    privileged: true
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      DISPLAY: ${DISPLAY:-}
+      XAUTHORITY: ${XAUTHORITY:-}
+      PX4_VEHICLE: ${PX4_VEHICLE}
+      GAZEBO_GUI: ${GAZEBO_GUI}
+      PX4_SIM_SPEED_FACTOR: ${PX4_SIM_SPEED_FACTOR}
+      PX4_LOG_DIR: ${PX4_LOG_DIR}
+    volumes:
+      - /dev:/dev
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${PX4_LOG_DIR}:/var/log/px4_sitl
+    stdin_open: true
+    tty: true
+    command: ["bash", "-lc", "source /opt/ros/noetic/setup.bash && sleep infinity"]
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/px4-sitl-healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s

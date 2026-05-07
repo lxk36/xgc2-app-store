@@ -1,0 +1,20 @@
+key: ros-noetic-desktop-full
+name: ROS Noetic Desktop Full
+version: 1.0.0
+image: osrf/ros:noetic-desktop-full
+description: Official OSRF ROS Noetic desktop-full image for generic ROS1 development and simulation.
+type: base
+tags:
+  - Robot
+  - Simulation
+  - ROS1
+  - Base
+architectures:
+  - amd64
+  - arm64
+license: BSD-3-Clause
+source: https://hub.docker.com/r/osrf/ros
+upstreamReferences:
+  - OSRF ROS Docker image
+entrypoints:
+  shell: /ros_entrypoint.sh

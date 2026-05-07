@@ -1,0 +1,21 @@
+key: px4-sitl-gazebo
+name: PX4 SITL Gazebo
+version: 1.0.0
+image: ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo:1.0.0
+description: PX4 software-in-the-loop simulation toolkit for Gazebo Classic and ROS Noetic.
+type: simulation
+tags:
+  - Robot
+  - Simulation
+  - PX4
+  - Gazebo
+architectures:
+  - amd64
+license: Apache-2.0
+source: https://gitee.com/bhswift/px4_sitl
+upstreamReferences:
+  - XGC1 px4_sitl package
+  - XGC1 px4_sitl README
+entrypoints:
+  shell: /usr/local/bin/px4-sitl-entrypoint
+  healthcheck: /usr/local/bin/px4-sitl-healthcheck
