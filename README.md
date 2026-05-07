@@ -10,7 +10,7 @@ public deployment server is required until XGC needs remote, unattended CD.
 
 | App | Image | Purpose |
 | --- | --- | --- |
-| `xgc-ros1-runtime` | `ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime` | Lean ROS Noetic simulation runtime for ROS1, MAVROS, VRPN, Gazebo Classic and core robot visualization. |
+| `xgc-ros1-runtime` | `ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime` | Curated ROS Noetic simulation toolkit for ROS1, MAVROS, VRPN, Gazebo Classic and core robot visualization. |
 
 ## Catalog
 

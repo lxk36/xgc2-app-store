@@ -1,7 +1,7 @@
 FROM osrf/ros:noetic-desktop-full
 
-LABEL org.opencontainers.image.title="XGC ROS1 Runtime"
-LABEL org.opencontainers.image.description="Lean ROS Noetic simulation runtime with MAVROS, VRPN, Gazebo Classic and core robot visualization dependencies."
+LABEL org.opencontainers.image.title="ROS1 Simulation Kit"
+LABEL org.opencontainers.image.description="Curated ROS Noetic simulation toolkit with MAVROS, VRPN, Gazebo Classic and core robot visualization dependencies."
 LABEL org.opencontainers.image.source="https://github.com/lxk36/xgc2-app-store"
 
 ENV DEBIAN_FRONTEND=noninteractive

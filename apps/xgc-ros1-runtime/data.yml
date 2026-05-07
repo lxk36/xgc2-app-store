@@ -1,16 +1,16 @@
-name: XGC ROS1 Runtime
-title: ROS Noetic runtime for XGC legacy robot stacks
+name: ROS1 Simulation Kit
+title: ROS Noetic simulation toolkit
 additionalProperties:
   key: xgc-ros1-runtime
-  name: XGC ROS1 Runtime
+  name: ROS1 Simulation Kit
   tags:
     - Robot
     - Simulation
     - ROS1
-    - Runtime
-  shortDescEn: ROS Noetic, MAVROS, VRPN, Gazebo Classic and common XGC legacy robot dependencies.
+    - Toolkit
+  shortDescEn: ROS Noetic, MAVROS, VRPN, Gazebo Classic and common simulation tools.
   description:
-    en: ROS Noetic runtime for legacy XGC1-compatible robot stacks without Qt or XGC1 AppImage.
+    en: Curated ROS Noetic toolkit for robot simulation workflows without desktop application bundles.
   type: runtime
   crossVersionUpdate: true
   limit: 0
