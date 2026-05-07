@@ -73,10 +73,15 @@ jobs:
         shell: bash
         run: |
           version="$(awk -F': ' '/^version:/ {print $2; exit}' "apps/${{ matrix.app }}/app.yml")"
+          source_image="$(awk -F': ' '/^upstreamImage:/ {print $2; exit}' "apps/${{ matrix.app }}/app.yml")"
+          if [[ -z "${source_image}" ]]; then
+            source_image="$(awk -F': ' '/^image:/ {print $2; exit}' "apps/${{ matrix.app }}/app.yml")"
+          fi
           ghcr_image="ghcr.io/${{ github.repository }}/${{ matrix.app }}"
           ghcr_image="${ghcr_image,,}"
           echo "version=${version}" >> "$GITHUB_OUTPUT"
           echo "image=${ghcr_image}" >> "$GITHUB_OUTPUT"
+          echo "source_image=${source_image}" >> "$GITHUB_OUTPUT"
           if [[ -f "apps/${{ matrix.app }}/Dockerfile" ]]; then
             echo "buildable=true" >> "$GITHUB_OUTPUT"
           else
@@ -106,6 +111,26 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha,scope=${{ matrix.app }}
           cache-to: type=gha,mode=max,scope=${{ matrix.app }}
+      - name: Mirror external image
+        if: steps.meta.outputs.buildable == 'false'
+        shell: bash
+        run: |
+          source_image="${{ steps.meta.outputs.source_image }}"
+          if [[ -z "${source_image}" ]]; then
+            echo "No source image configured for apps/${{ matrix.app }}" >&2
+            exit 1
+          fi
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            docker buildx imagetools inspect "${source_image}" >/dev/null
+            echo "External source image is reachable: ${source_image}"
+            exit 0
+          fi
+          while IFS= read -r tag; do
+            [[ -z "${tag}" ]] && continue
+            docker buildx imagetools create --tag "${tag}" "${source_image}"
+          done <<'EOF'
+          ${{ steps.meta.outputs.tags }}
+          EOF
       - name: Smoke image
         if: github.event_name == 'pull_request' && steps.meta.outputs.buildable == 'true'
         run: |
@@ -114,4 +139,4 @@ jobs:
       - name: Skip external image app
         if: steps.meta.outputs.buildable == 'false'
         run: |
-          echo "apps/${{ matrix.app }} has no Dockerfile; catalog metadata only."
+          echo "apps/${{ matrix.app }} has no Dockerfile; mirrored upstream image ${{ steps.meta.outputs.source_image }}."

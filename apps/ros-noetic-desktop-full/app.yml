@@ -1,7 +1,8 @@
 key: ros-noetic-desktop-full
 name: ROS Noetic Desktop Full
 version: 1.0.0
-image: osrf/ros:noetic-desktop-full
+image: ghcr.io/lxk36/xgc2-app-store/ros-noetic-desktop-full:1.0.0
+upstreamImage: osrf/ros:noetic-desktop-full
 description: Official OSRF ROS Noetic desktop-full image for generic ROS1 development and simulation.
 type: base
 tags:

@@ -31,7 +31,7 @@ apps:
     name: ROS Noetic Desktop Full
     version: 1.0.0
     type: base
-    image: osrf/ros:noetic-desktop-full
+    image: ghcr.io/lxk36/xgc2-app-store/ros-noetic-desktop-full:1.0.0
     app: ../apps/ros-noetic-desktop-full/app.yml
     data: ../apps/ros-noetic-desktop-full/data.yml
     compose: ../apps/ros-noetic-desktop-full/docker-compose.yml

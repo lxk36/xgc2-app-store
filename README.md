@@ -12,7 +12,7 @@ public deployment server is required until XGC needs remote, unattended CD.
 | --- | --- | --- |
 | `xgc-ros1-runtime` | `ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime` | Curated ROS Noetic simulation toolkit for ROS1, MAVROS, VRPN, Gazebo Classic and core robot visualization. |
 | `px4-sitl-gazebo` | `ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo` | PX4 software-in-the-loop simulation toolkit for Gazebo Classic and ROS Noetic. |
-| `ros-noetic-desktop-full` | `osrf/ros:noetic-desktop-full` | Official OSRF ROS Noetic desktop-full image, referenced directly without XGC2 image hosting. |
+| `ros-noetic-desktop-full` | `ghcr.io/lxk36/xgc2-app-store/ros-noetic-desktop-full` | Official OSRF ROS Noetic desktop-full image mirrored from `osrf/ros:noetic-desktop-full`. |
 
 ## Catalog
 
@@ -33,8 +33,10 @@ changes under:
 apps/<app-key>/
 ```
 
-An app without `apps/<app-key>/Dockerfile` is treated as an external-image app:
-CI keeps it in the catalog but skips image build and push.
+An app without `apps/<app-key>/Dockerfile` is treated as an external-image app.
+CI reads `upstreamImage` from `app.yml` and mirrors that image manifest into
+the XGC app registry tags. This keeps public upstream images usable through the
+same GHCR/domestic mirror source switching as XGC-built images.
 
 For pull requests, CI builds changed images without pushing. For `master`, CI
 always pushes:
