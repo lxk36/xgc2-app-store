@@ -10,7 +10,7 @@ additionalProperties:
     - Gazebo
   shortDescEn: PX4 SITL, Gazebo Classic, MAVROS and ROS Noetic simulation tools.
   description:
-    en: PX4 software-in-the-loop simulation toolkit collected from the XGC1 PX4 SITL workflow.
+    en: PX4-Autopilot v1.14.4 SITL image with Gazebo Classic, MAVROS and ROS Noetic tools.
   type: simulation
   crossVersionUpdate: true
   limit: 0
