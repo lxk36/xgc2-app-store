@@ -1,0 +1,52 @@
+name: Gazebo Harmonic ROS2 Bridge
+title: Gazebo Harmonic with ROS 2 Jazzy integration
+additionalProperties:
+  key: gazebo-harmonic-ros2
+  name: Gazebo Harmonic ROS2 Bridge
+  tags:
+    - ROS2
+    - Gazebo
+    - Harmonic
+  shortDescEn: Gazebo Harmonic and ROS 2 Jazzy bridge for simulation workloads.
+  description:
+    en: Public CI-built Gazebo Harmonic image with ROS 2 Jazzy ros-gz integration. Intended for simulation hosts and SITL experiments.
+  type: simulation
+  crossVersionUpdate: true
+  limit: 0
+  website: https://gazebosim.org/
+  github: https://github.com/lxk36/xgc2-app-store
+  document: https://github.com/lxk36/xgc2-app-store/tree/master/apps/gazebo-harmonic-ros2
+  architectures:
+    - amd64
+  batchInstallSupport: true
+  formFields:
+    - default: gazebo-harmonic-ros2
+      envKey: CONTAINER_NAME
+      label:
+        en: Container name
+      required: true
+      type: text
+    - default: xgc
+      envKey: XGC_USER
+      label:
+        en: User name
+      required: true
+      type: text
+    - default: "1000"
+      envKey: USER_UID
+      label:
+        en: User UID
+      required: true
+      type: number
+    - default: "1000"
+      envKey: USER_GID
+      label:
+        en: User GID
+      required: true
+      type: number
+    - default: /tmp/gazebo_ws
+      envKey: SIM_WORKSPACE
+      label:
+        en: Simulation workspace
+      required: true
+      type: text

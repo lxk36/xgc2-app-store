@@ -4,13 +4,13 @@ additionalProperties:
   key: ros-noetic-robot-focal
   name: ROS Noetic Robot Focal
   tags:
-    - Robot
     - ROS1
-    - Base
+    - Multiarch
+    - Robot
   shortDescEn: Official ROS Noetic robot-focal Docker image with multi-architecture support.
   description:
     en: Official ROS Noetic robot image on Ubuntu Focal, mirrored by XGC2 CI for amd64, arm/v7 and arm64 hosts.
-  type: base
+  type: deployment
   crossVersionUpdate: true
   limit: 0
   website: https://wiki.ros.org/noetic

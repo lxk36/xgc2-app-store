@@ -4,16 +4,16 @@ apps:
   - key: xgc-ros1-runtime
     name: ROS1 Simulation Kit
     version: 1.1.0
-    type: runtime
+    type: simulation
     image: ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime:1.1.0
     app: ../apps/xgc-ros1-runtime/app.yml
     data: ../apps/xgc-ros1-runtime/data.yml
     compose: ../apps/xgc-ros1-runtime/docker-compose.yml
     tags:
-      - Robot
-      - Simulation
       - ROS1
-      - Toolkit
+      - MAVROS
+      - VRPN
+      - Gazebo
   - key: px4-sitl-gazebo
     name: PX4 SITL Gazebo
     version: 1.0.3
@@ -23,54 +23,90 @@ apps:
     data: ../apps/px4-sitl-gazebo/data.yml
     compose: ../apps/px4-sitl-gazebo/docker-compose.yml
     tags:
-      - Robot
-      - Simulation
       - PX4
       - Gazebo
+      - SITL
   - key: ros-noetic-desktop-full
     name: ROS Noetic Desktop Full
     version: 1.0.0
-    type: base
+    type: development
     image: ghcr.io/lxk36/xgc2-app-store/ros-noetic-desktop-full:1.0.0
     app: ../apps/ros-noetic-desktop-full/app.yml
     data: ../apps/ros-noetic-desktop-full/data.yml
     compose: ../apps/ros-noetic-desktop-full/docker-compose.yml
     tags:
-      - Robot
-      - Simulation
       - ROS1
-      - Base
+      - Desktop
   - key: ros-noetic-robot-focal
     name: ROS Noetic Robot Focal
     version: 1.0.0
-    type: base
+    type: deployment
     image: ghcr.io/lxk36/xgc2-app-store/ros-noetic-robot-focal:1.0.0
     app: ../apps/ros-noetic-robot-focal/app.yml
     data: ../apps/ros-noetic-robot-focal/data.yml
     compose: ../apps/ros-noetic-robot-focal/docker-compose.yml
     tags:
-      - Robot
       - ROS1
-      - Base
+      - Multiarch
+      - Robot
+  - key: ros2-jazzy-dev-base
+    name: ROS2 Jazzy Development Base
+    version: 1.0.0
+    type: development
+    image: ghcr.io/lxk36/xgc2-app-store/ros2-jazzy-dev-base:1.0.0
+    app: ../apps/ros2-jazzy-dev-base/app.yml
+    data: ../apps/ros2-jazzy-dev-base/data.yml
+    compose: ../apps/ros2-jazzy-dev-base/docker-compose.yml
+    tags:
+      - ROS2
+      - Jazzy
+      - MAVROS
+      - PlotJuggler
+  - key: gazebo-harmonic-ros2
+    name: Gazebo Harmonic ROS2 Bridge
+    version: 1.0.0
+    type: simulation
+    image: ghcr.io/lxk36/xgc2-app-store/gazebo-harmonic-ros2:1.0.0
+    app: ../apps/gazebo-harmonic-ros2/app.yml
+    data: ../apps/gazebo-harmonic-ros2/data.yml
+    compose: ../apps/gazebo-harmonic-ros2/docker-compose.yml
+    tags:
+      - ROS2
+      - Gazebo
+      - Harmonic
+  - key: px4-ros2-sitl-qgc
+    name: PX4 ROS2 SITL with QGC
+    version: 1.0.0
+    type: simulation
+    image: ghcr.io/lxk36/xgc2-app-store/px4-ros2-sitl-qgc:1.0.0
+    app: ../apps/px4-ros2-sitl-qgc/app.yml
+    data: ../apps/px4-ros2-sitl-qgc/data.yml
+    compose: ../apps/px4-ros2-sitl-qgc/docker-compose.yml
+    tags:
+      - ROS2
+      - PX4
+      - SITL
+      - QGroundControl
+  - key: xgc2-dev-workstation
+    name: XGC2 Development Workstation
+    version: 1.0.0
+    type: development
+    image: ghcr.io/lxk36/xgc2-app-store/xgc2-dev-workstation:1.0.0
+    app: ../apps/xgc2-dev-workstation/app.yml
+    data: ../apps/xgc2-dev-workstation/data.yml
+    compose: ../apps/xgc2-dev-workstation/docker-compose.yml
+    tags:
+      - ROS2
+      - Qt
+      - Docker
+      - Desktop
 tags:
-  - key: Robot
-    name: Robot
-    sort: 10
   - key: Simulation
     name: Simulation
+    sort: 10
+  - key: Deployment
+    name: Deployment
     sort: 20
-  - key: ROS1
-    name: ROS1
+  - key: Development
+    name: Development
     sort: 30
-  - key: Toolkit
-    name: Toolkit
-    sort: 40
-  - key: PX4
-    name: PX4
-    sort: 50
-  - key: Gazebo
-    name: Gazebo
-    sort: 60
-  - key: Base
-    name: Base
-    sort: 70

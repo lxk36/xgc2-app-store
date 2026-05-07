@@ -4,11 +4,11 @@ version: 1.0.0
 image: ghcr.io/lxk36/xgc2-app-store/ros-noetic-robot-focal:1.0.0
 upstreamImage: ros:noetic-robot-focal
 description: Official ROS Noetic robot image on Ubuntu Focal, mirrored with its upstream multi-architecture manifest.
-type: base
+type: deployment
 tags:
-  - Robot
   - ROS1
-  - Base
+  - Multiarch
+  - Robot
 architectures:
   - amd64
   - arm/v7

@@ -1,0 +1,53 @@
+name: ROS2 Jazzy Development Base
+title: ROS 2 Jazzy ground-station development base
+additionalProperties:
+  key: ros2-jazzy-dev-base
+  name: ROS2 Jazzy Development Base
+  tags:
+    - ROS2
+    - Jazzy
+    - MAVROS
+    - PlotJuggler
+  shortDescEn: ROS 2 Jazzy desktop base with ground-station development tools.
+  description:
+    en: Public CI-built ROS 2 Jazzy desktop base with MAVROS, PlotJuggler, VRPN client and useful shell tools. UID/GID are configured at install time.
+  type: development
+  crossVersionUpdate: true
+  limit: 0
+  website: https://docs.ros.org/en/jazzy/
+  github: https://github.com/lxk36/xgc2-app-store
+  document: https://github.com/lxk36/xgc2-app-store/tree/master/apps/ros2-jazzy-dev-base
+  architectures:
+    - amd64
+  batchInstallSupport: true
+  formFields:
+    - default: ros2-jazzy-dev-base
+      envKey: CONTAINER_NAME
+      label:
+        en: Container name
+      required: true
+      type: text
+    - default: xgc
+      envKey: XGC_USER
+      label:
+        en: User name
+      required: true
+      type: text
+    - default: "1000"
+      envKey: USER_UID
+      label:
+        en: User UID
+      required: true
+      type: number
+    - default: "1000"
+      envKey: USER_GID
+      label:
+        en: User GID
+      required: true
+      type: number
+    - default: /tmp/xgc_ros2_ws
+      envKey: ROS2_WORKSPACE
+      label:
+        en: Workspace mount path
+      required: true
+      type: text

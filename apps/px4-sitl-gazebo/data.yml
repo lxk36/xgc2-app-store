@@ -4,10 +4,9 @@ additionalProperties:
   key: px4-sitl-gazebo
   name: PX4 SITL Gazebo
   tags:
-    - Robot
-    - Simulation
     - PX4
     - Gazebo
+    - SITL
   shortDescEn: PX4 SITL, Gazebo Classic, MAVROS and ROS Noetic simulation tools.
   description:
     en: PX4-Autopilot v1.14.4 SITL image with Gazebo Classic, MAVROS and ROS Noetic tools.

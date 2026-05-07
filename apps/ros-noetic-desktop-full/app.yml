@@ -4,12 +4,10 @@ version: 1.0.0
 image: ghcr.io/lxk36/xgc2-app-store/ros-noetic-desktop-full:1.0.0
 upstreamImage: osrf/ros:noetic-desktop-full
 description: Official OSRF ROS Noetic desktop-full image mirrored for generic ROS1 development and simulation.
-type: base
+type: development
 tags:
-  - Robot
-  - Simulation
   - ROS1
-  - Base
+  - Desktop
 architectures:
   - amd64
 license: BSD-3-Clause

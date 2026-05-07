@@ -8,12 +8,22 @@ public deployment server is required until XGC needs remote, unattended CD.
 
 ## Apps
 
-| App | Image | Purpose |
-| --- | --- | --- |
-| `xgc-ros1-runtime` | `ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime` | Curated ROS Noetic simulation toolkit for ROS1, MAVROS, VRPN, Gazebo Classic and core robot visualization. |
-| `px4-sitl-gazebo` | `ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo` | PX4 software-in-the-loop simulation toolkit for Gazebo Classic and ROS Noetic. |
-| `ros-noetic-desktop-full` | `ghcr.io/lxk36/xgc2-app-store/ros-noetic-desktop-full` | Official OSRF ROS Noetic desktop-full image mirrored for amd64 deployments. |
-| `ros-noetic-robot-focal` | `ghcr.io/lxk36/xgc2-app-store/ros-noetic-robot-focal` | Official ROS Noetic robot-focal image mirrored for amd64, arm/v7 and arm64 deployments. |
+App categories are intentionally limited to three operator-facing types:
+
+- `simulation`: SITL, Gazebo, QGroundControl and simulator support images.
+- `deployment`: multi-architecture images intended for robot or field hosts.
+- `development`: source development and debugging workstations.
+
+| App | Type | Image | Purpose |
+| --- | --- | --- | --- |
+| `xgc-ros1-runtime` | `simulation` | `ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime` | Curated ROS Noetic simulation toolkit for ROS1, MAVROS, VRPN, Gazebo Classic and core robot visualization. |
+| `px4-sitl-gazebo` | `simulation` | `ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo` | PX4 software-in-the-loop simulation toolkit for Gazebo Classic and ROS Noetic. |
+| `gazebo-harmonic-ros2` | `simulation` | `ghcr.io/lxk36/xgc2-app-store/gazebo-harmonic-ros2` | Gazebo Harmonic with ROS 2 Jazzy integration. |
+| `px4-ros2-sitl-qgc` | `simulation` | `ghcr.io/lxk36/xgc2-app-store/px4-ros2-sitl-qgc` | PX4 ROS 2 SITL image with Micro XRCE-DDS Agent and QGroundControl AppImage included. |
+| `ros-noetic-robot-focal` | `deployment` | `ghcr.io/lxk36/xgc2-app-store/ros-noetic-robot-focal` | Official ROS Noetic robot-focal image mirrored for amd64, arm/v7 and arm64 deployments. |
+| `ros-noetic-desktop-full` | `development` | `ghcr.io/lxk36/xgc2-app-store/ros-noetic-desktop-full` | Official OSRF ROS Noetic desktop-full image mirrored for amd64 development use. |
+| `ros2-jazzy-dev-base` | `development` | `ghcr.io/lxk36/xgc2-app-store/ros2-jazzy-dev-base` | ROS 2 Jazzy desktop base with ground-station development tools. |
+| `xgc2-dev-workstation` | `development` | `ghcr.io/lxk36/xgc2-app-store/xgc2-dev-workstation` | ROS 2 Jazzy workstation with Qt development packages and Docker CLI. |
 
 ## Catalog
 

@@ -1,0 +1,53 @@
+name: PX4 ROS2 SITL with QGC
+title: PX4 ROS 2 SITL with Micro XRCE-DDS Agent and QGroundControl
+additionalProperties:
+  key: px4-ros2-sitl-qgc
+  name: PX4 ROS2 SITL with QGC
+  tags:
+    - ROS2
+    - PX4
+    - SITL
+    - QGroundControl
+  shortDescEn: PX4 ROS 2 SITL tooling with QGroundControl already baked into the image.
+  description:
+    en: CI-built PX4 ROS 2 simulation image. PX4-Autopilot, Micro XRCE-DDS Agent and QGroundControl AppImage are downloaded during image build, not mounted from local developer paths.
+  type: simulation
+  crossVersionUpdate: true
+  limit: 0
+  website: https://docs.px4.io/
+  github: https://github.com/lxk36/xgc2-app-store
+  document: https://github.com/lxk36/xgc2-app-store/tree/master/apps/px4-ros2-sitl-qgc
+  architectures:
+    - amd64
+  batchInstallSupport: true
+  formFields:
+    - default: px4-ros2-sitl-qgc
+      envKey: CONTAINER_NAME
+      label:
+        en: Container name
+      required: true
+      type: text
+    - default: xgc
+      envKey: XGC_USER
+      label:
+        en: User name
+      required: true
+      type: text
+    - default: "1000"
+      envKey: USER_UID
+      label:
+        en: User UID
+      required: true
+      type: number
+    - default: "1000"
+      envKey: USER_GID
+      label:
+        en: User GID
+      required: true
+      type: number
+    - default: /tmp/px4_logs
+      envKey: PX4_LOG_DIR
+      label:
+        en: PX4 log directory
+      required: true
+      type: text

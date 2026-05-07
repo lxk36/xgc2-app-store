@@ -231,9 +231,14 @@ jobs:
           EOF
       - name: Smoke image
         if: github.event_name == 'pull_request' && steps.meta.outputs.buildable == 'true'
+        shell: bash
         run: |
-          docker run --rm "${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}" bash -lc \
-            'source /opt/ros/noetic/setup.bash && rosversion -d && roscore --help >/dev/null'
+          healthcheck="$(ruby -ryaml -e 'doc = YAML.load_file(ARGV[0]); puts doc.dig("entrypoints", "healthcheck").to_s' "apps/${{ matrix.app }}/app.yml")"
+          if [[ -z "${healthcheck}" ]]; then
+            echo "No healthcheck entrypoint declared for apps/${{ matrix.app }}; image build completed."
+            exit 0
+          fi
+          docker run --rm "${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}" bash -lc "${healthcheck}"
       - name: Skip external image app
         if: steps.meta.outputs.buildable == 'false'
         run: |

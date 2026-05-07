@@ -4,14 +4,14 @@ additionalProperties:
   key: xgc-ros1-runtime
   name: ROS1 Simulation Kit
   tags:
-    - Robot
-    - Simulation
     - ROS1
-    - Toolkit
+    - MAVROS
+    - VRPN
+    - Gazebo
   shortDescEn: ROS Noetic, MAVROS, VRPN, Gazebo Classic and common simulation tools.
   description:
     en: Curated ROS Noetic toolkit for robot simulation workflows without desktop application bundles.
-  type: runtime
+  type: simulation
   crossVersionUpdate: true
   limit: 0
   website: https://wiki.ros.org/noetic

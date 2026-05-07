@@ -1,0 +1,26 @@
+services:
+  xgc2-dev-workstation:
+    image: ghcr.io/lxk36/xgc2-app-store/xgc2-dev-workstation:1.0.0
+    container_name: ${CONTAINER_NAME}
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      DISPLAY: ${DISPLAY:-}
+      XAUTHORITY: ${XAUTHORITY:-}
+      XGC_USER: ${XGC_USER}
+      USER_UID: ${USER_UID}
+      USER_GID: ${USER_GID}
+      SOURCE_WORKSPACE: ${SOURCE_WORKSPACE}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${SOURCE_WORKSPACE}:/workspace
+      - ${DOCKER_SOCKET}:/var/run/docker.sock
+    stdin_open: true
+    tty: true
+    command: ["bash"]
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/xgc2-dev-healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s

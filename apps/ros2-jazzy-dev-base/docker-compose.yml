@@ -1,0 +1,25 @@
+services:
+  ros2-jazzy-dev-base:
+    image: ghcr.io/lxk36/xgc2-app-store/ros2-jazzy-dev-base:1.0.0
+    container_name: ${CONTAINER_NAME}
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      DISPLAY: ${DISPLAY:-}
+      XAUTHORITY: ${XAUTHORITY:-}
+      XGC_USER: ${XGC_USER}
+      USER_UID: ${USER_UID}
+      USER_GID: ${USER_GID}
+      ROS2_WORKSPACE: ${ROS2_WORKSPACE}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${ROS2_WORKSPACE}:/workspace
+    stdin_open: true
+    tty: true
+    command: ["bash"]
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/xgc-ros2-healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
