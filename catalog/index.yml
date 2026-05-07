@@ -76,9 +76,9 @@ apps:
       - Harmonic
   - key: px4-ros2-sitl-qgc
     name: PX4 ROS2 SITL with QGC
-    version: 1.0.0
+    version: 1.0.1
     type: simulation
-    image: ghcr.io/lxk36/xgc2-app-store/px4-ros2-sitl-qgc:1.0.0
+    image: ghcr.io/lxk36/xgc2-app-store/px4-ros2-sitl-qgc:1.0.1
     app: ../apps/px4-ros2-sitl-qgc/app.yml
     data: ../apps/px4-ros2-sitl-qgc/data.yml
     compose: ../apps/px4-ros2-sitl-qgc/docker-compose.yml

@@ -1,7 +1,7 @@
 key: px4-ros2-sitl-qgc
 name: PX4 ROS2 SITL with QGC
-version: 1.0.0
-image: ghcr.io/lxk36/xgc2-app-store/px4-ros2-sitl-qgc:1.0.0
+version: 1.0.1
+image: ghcr.io/lxk36/xgc2-app-store/px4-ros2-sitl-qgc:1.0.1
 description: PX4 ROS 2 SITL development image with Micro XRCE-DDS Agent and QGroundControl AppImage included.
 type: simulation
 tags:
@@ -16,7 +16,7 @@ source: https://github.com/lxk36/xgc2-app-store
 upstreamReferences:
   - PX4-Autopilot v1.16.0
   - Micro-XRCE-DDS-Agent v2.4.3
-  - QGroundControl AppImage
+  - QGroundControl v4.4.4 AppImage
 entrypoints:
   shell: /usr/local/bin/xgc-entrypoint
   qgroundcontrol: /usr/local/bin/qgroundcontrol

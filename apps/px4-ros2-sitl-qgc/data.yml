@@ -10,7 +10,7 @@ additionalProperties:
     - QGroundControl
   shortDescEn: PX4 ROS 2 SITL tooling with QGroundControl already baked into the image.
   description:
-    en: CI-built PX4 ROS 2 simulation image. PX4-Autopilot, Micro XRCE-DDS Agent and QGroundControl AppImage are downloaded during image build, not mounted from local developer paths.
+    en: CI-built PX4 ROS 2 simulation image. PX4-Autopilot, Micro XRCE-DDS Agent and QGroundControl v4.4.4 AppImage are downloaded during image build, not mounted from local developer paths.
   type: simulation
   crossVersionUpdate: true
   limit: 0

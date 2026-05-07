@@ -15,7 +15,7 @@ ARG PX4_AUTOPILOT_REPO=https://github.com/PX4/PX4-Autopilot.git
 ARG PX4_AUTOPILOT_REF=v1.16.0
 ARG MICRO_XRCE_DDS_AGENT_REPO=https://github.com/eProsima/Micro-XRCE-DDS-Agent.git
 ARG MICRO_XRCE_DDS_AGENT_REF=v2.4.3
-ARG QGC_APPIMAGE_URL=https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.AppImage
+ARG QGC_APPIMAGE_URL=https://github.com/mavlink/qgroundcontrol/releases/download/v4.4.4/QGroundControl.AppImage
 ARG QGC_APPIMAGE_SHA256=
 
 COPY scripts/entrypoint.sh /usr/local/bin/xgc-entrypoint
