@@ -27,31 +27,6 @@ additionalProperties:
         en: Container name
       required: true
       type: text
-    - default: iris
-      envKey: PX4_VEHICLE
-      label:
-        en: PX4 vehicle
-      required: true
-      type: select
-      values:
-        - iris
-        - standard_vtol
-        - plane
-    - default: "true"
-      envKey: GAZEBO_GUI
-      label:
-        en: Gazebo GUI
-      required: true
-      type: select
-      values:
-        - "true"
-        - "false"
-    - default: "1"
-      envKey: PX4_SIM_SPEED_FACTOR
-      label:
-        en: Simulation speed factor
-      required: true
-      type: number
     - default: /tmp/xgc_px4_logs
       envKey: PX4_LOG_DIR
       label:
