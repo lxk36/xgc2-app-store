@@ -37,12 +37,46 @@ An app without `apps/<app-key>/Dockerfile` is treated as an external-image app:
 CI keeps it in the catalog but skips image build and push.
 
 For pull requests, CI builds changed images without pushing. For `master`, CI
-pushes:
+always pushes:
 
 ```text
 ghcr.io/lxk36/xgc2-app-store/<app-key>:latest
 ghcr.io/lxk36/xgc2-app-store/<app-key>:<version>
 ```
+
+If domestic registry secrets are configured, CI also pushes the same image tags
+to that registry:
+
+```text
+<XGC_CN_REGISTRY>/<XGC_CN_NAMESPACE>/<app-key>:latest
+<XGC_CN_REGISTRY>/<XGC_CN_NAMESPACE>/<app-key>:<version>
+```
+
+The recommended first domestic target is an Aliyun ACR namespace dedicated to
+XGC app images, for example:
+
+```text
+registry.cn-hangzhou.aliyuncs.com/xgc2-app-store
+```
+
+Keep this namespace public if deployment hosts should pull without `docker
+login`. Keep it private only when every deployment host can be preconfigured
+with registry credentials.
+
+### Domestic Registry Secrets
+
+Add these repository secrets under GitHub repository Settings -> Secrets and
+variables -> Actions -> Repository secrets:
+
+| Secret | Example | Purpose |
+| --- | --- | --- |
+| `XGC_CN_REGISTRY` | `registry.cn-hangzhou.aliyuncs.com` | Registry host. Do not include a namespace. |
+| `XGC_CN_NAMESPACE` | `xgc2-app-store` | Registry namespace/project for XGC app images. |
+| `XGC_CN_USERNAME` | `xgc2-ci` | Registry username or service account. |
+| `XGC_CN_PASSWORD` | `***` | Registry password or access token. |
+
+The workflow does not print these values. If any domestic registry setting is
+missing, the GHCR push still works and the domestic push is skipped.
 
 ## Local Smoke
 
