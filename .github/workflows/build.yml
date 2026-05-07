@@ -106,6 +106,7 @@ jobs:
         with:
           context: apps/${{ matrix.app }}
           file: apps/${{ matrix.app }}/Dockerfile
+          platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
           load: ${{ github.event_name == 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
@@ -120,14 +121,10 @@ jobs:
             echo "No source image configured for apps/${{ matrix.app }}" >&2
             exit 1
           fi
-          source_manifest="$(docker buildx imagetools inspect "${source_image}")"
+          source_manifest="$(docker manifest inspect -v "${source_image}")"
           printf '%s\n' "${source_manifest}"
-          if grep -q '^[[:space:]]*-[[:space:]]*amd64[[:space:]]*$' "apps/${{ matrix.app }}/app.yml" && ! grep -q 'linux/amd64' <<<"${source_manifest}"; then
+          if grep -q '^[[:space:]]*-[[:space:]]*amd64[[:space:]]*$' "apps/${{ matrix.app }}/app.yml" && ! grep -q '"architecture": "amd64"' <<<"${source_manifest}"; then
             echo "Source image ${source_image} does not expose linux/amd64" >&2
-            exit 1
-          fi
-          if grep -q '^[[:space:]]*-[[:space:]]*arm64[[:space:]]*$' "apps/${{ matrix.app }}/app.yml" && ! grep -q 'linux/arm64' <<<"${source_manifest}"; then
-            echo "Source image ${source_image} does not expose linux/arm64" >&2
             exit 1
           fi
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
@@ -137,13 +134,9 @@ jobs:
           while IFS= read -r tag; do
             [[ -z "${tag}" ]] && continue
             docker buildx imagetools create --tag "${tag}" "${source_image}"
-            target_manifest="$(docker buildx imagetools inspect "${tag}")"
-            if ! grep -q 'linux/amd64' <<<"${target_manifest}"; then
+            target_manifest="$(docker manifest inspect -v "${tag}")"
+            if ! grep -q '"architecture": "amd64"' <<<"${target_manifest}"; then
               echo "Mirrored image ${tag} does not expose linux/amd64" >&2
-              exit 1
-            fi
-            if grep -q '^[[:space:]]*-[[:space:]]*arm64[[:space:]]*$' "apps/${{ matrix.app }}/app.yml" && ! grep -q 'linux/arm64' <<<"${target_manifest}"; then
-              echo "Mirrored image ${tag} does not expose linux/arm64" >&2
               exit 1
             fi
           done <<'EOF'
