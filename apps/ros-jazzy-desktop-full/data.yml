@@ -1,0 +1,34 @@
+name: ROS Jazzy Desktop Full
+title: Official OSRF ROS 2 Jazzy desktop-full image
+additionalProperties:
+  key: ros-jazzy-desktop-full
+  name: ROS Jazzy Desktop Full
+  tags:
+    - ROS2
+    - Jazzy
+    - Desktop
+  shortDescEn: Official OSRF ROS 2 Jazzy desktop-full Docker image.
+  description:
+    en: Official OSRF ROS 2 Jazzy desktop-full image mirrored by XGC2 CI for desktop development and simulation use.
+  type: development
+  crossVersionUpdate: true
+  limit: 0
+  website: https://docs.ros.org/en/jazzy/
+  github: https://github.com/osrf/docker_images
+  document: https://hub.docker.com/r/osrf/ros
+  architectures:
+    - amd64
+  batchInstallSupport: true
+  formFields:
+    - default: ros-jazzy-desktop-full
+      envKey: CONTAINER_NAME
+      label:
+        en: Container name
+      required: true
+      type: text
+    - default: /tmp/ros2_ws
+      envKey: ROS2_WORKSPACE
+      label:
+        en: Workspace mount path
+      required: true
+      type: text

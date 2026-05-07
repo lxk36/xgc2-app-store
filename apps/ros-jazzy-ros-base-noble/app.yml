@@ -1,0 +1,21 @@
+key: ros-jazzy-ros-base-noble
+name: ROS Jazzy Base Noble
+version: 1.0.0
+image: ghcr.io/lxk36/xgc2-app-store/ros-jazzy-ros-base-noble:1.0.0
+upstreamImage: ros:jazzy-ros-base-noble
+description: Official ROS 2 Jazzy ros-base image on Ubuntu Noble, mirrored with its upstream multi-architecture manifest.
+type: deployment
+tags:
+  - ROS2
+  - Jazzy
+  - Multiarch
+  - Robot
+architectures:
+  - amd64
+  - arm64/v8
+license: BSD-3-Clause
+source: https://hub.docker.com/_/ros
+upstreamReferences:
+  - ros:jazzy-ros-base-noble
+entrypoints:
+  shell: /ros_entrypoint.sh

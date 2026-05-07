@@ -24,6 +24,8 @@ App categories are intentionally limited to three operator-facing types:
 | `ros-noetic-desktop-full` | `development` | `ghcr.io/lxk36/xgc2-app-store/ros-noetic-desktop-full` | Official OSRF ROS Noetic desktop-full image mirrored for amd64 development use. |
 | `ros2-jazzy-dev-base` | `development` | `ghcr.io/lxk36/xgc2-app-store/ros2-jazzy-dev-base` | ROS 2 Jazzy desktop base with ground-station development tools. |
 | `xgc2-dev-workstation` | `development` | `ghcr.io/lxk36/xgc2-app-store/xgc2-dev-workstation` | ROS 2 Jazzy workstation with Qt development packages and Docker CLI. |
+| `ros-jazzy-desktop-full` | `development` | `ghcr.io/lxk36/xgc2-app-store/ros-jazzy-desktop-full` | Official OSRF ROS 2 Jazzy desktop-full image mirrored for amd64 development use. |
+| `ros-jazzy-ros-base-noble` | `deployment` | `ghcr.io/lxk36/xgc2-app-store/ros-jazzy-ros-base-noble` | Official ROS 2 Jazzy ros-base image mirrored for amd64 and arm64 deployments. |
 
 ## Catalog
 

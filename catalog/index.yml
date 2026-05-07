@@ -100,6 +100,31 @@ apps:
       - Qt
       - Docker
       - Desktop
+  - key: ros-jazzy-desktop-full
+    name: ROS Jazzy Desktop Full
+    version: 1.0.0
+    type: development
+    image: ghcr.io/lxk36/xgc2-app-store/ros-jazzy-desktop-full:1.0.0
+    app: ../apps/ros-jazzy-desktop-full/app.yml
+    data: ../apps/ros-jazzy-desktop-full/data.yml
+    compose: ../apps/ros-jazzy-desktop-full/docker-compose.yml
+    tags:
+      - ROS2
+      - Jazzy
+      - Desktop
+  - key: ros-jazzy-ros-base-noble
+    name: ROS Jazzy Base Noble
+    version: 1.0.0
+    type: deployment
+    image: ghcr.io/lxk36/xgc2-app-store/ros-jazzy-ros-base-noble:1.0.0
+    app: ../apps/ros-jazzy-ros-base-noble/app.yml
+    data: ../apps/ros-jazzy-ros-base-noble/data.yml
+    compose: ../apps/ros-jazzy-ros-base-noble/docker-compose.yml
+    tags:
+      - ROS2
+      - Jazzy
+      - Multiarch
+      - Robot
 tags:
   - key: Simulation
     name: Simulation

@@ -1,0 +1,19 @@
+key: ros-jazzy-desktop-full
+name: ROS Jazzy Desktop Full
+version: 1.0.0
+image: ghcr.io/lxk36/xgc2-app-store/ros-jazzy-desktop-full:1.0.0
+upstreamImage: osrf/ros:jazzy-desktop-full
+description: Official OSRF ROS 2 Jazzy desktop-full image mirrored for desktop development and simulation use.
+type: development
+tags:
+  - ROS2
+  - Jazzy
+  - Desktop
+architectures:
+  - amd64
+license: BSD-3-Clause
+source: https://hub.docker.com/r/osrf/ros
+upstreamReferences:
+  - osrf/ros:jazzy-desktop-full
+entrypoints:
+  shell: /ros_entrypoint.sh

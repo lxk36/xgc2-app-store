@@ -1,0 +1,36 @@
+name: ROS Jazzy Base Noble
+title: Official ROS 2 Jazzy ros-base image on Ubuntu Noble
+additionalProperties:
+  key: ros-jazzy-ros-base-noble
+  name: ROS Jazzy Base Noble
+  tags:
+    - ROS2
+    - Jazzy
+    - Multiarch
+    - Robot
+  shortDescEn: Official ROS 2 Jazzy ros-base Docker image with multi-architecture support.
+  description:
+    en: Official ROS 2 Jazzy ros-base image on Ubuntu Noble, mirrored by XGC2 CI for amd64 and arm64 hosts.
+  type: deployment
+  crossVersionUpdate: true
+  limit: 0
+  website: https://docs.ros.org/en/jazzy/
+  github: https://github.com/osrf/docker_images
+  document: https://hub.docker.com/_/ros
+  architectures:
+    - amd64
+    - arm64/v8
+  batchInstallSupport: true
+  formFields:
+    - default: ros-jazzy-ros-base-noble
+      envKey: CONTAINER_NAME
+      label:
+        en: Container name
+      required: true
+      type: text
+    - default: /tmp/ros2_ws
+      envKey: ROS2_WORKSPACE
+      label:
+        en: Workspace mount path
+      required: true
+      type: text
