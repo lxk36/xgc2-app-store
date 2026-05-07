@@ -16,9 +16,9 @@ apps:
       - Toolkit
   - key: px4-sitl-gazebo
     name: PX4 SITL Gazebo
-    version: 1.0.1
+    version: 1.0.2
     type: simulation
-    image: ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo:1.0.1
+    image: ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo:1.0.2
     app: ../apps/px4-sitl-gazebo/app.yml
     data: ../apps/px4-sitl-gazebo/data.yml
     compose: ../apps/px4-sitl-gazebo/docker-compose.yml

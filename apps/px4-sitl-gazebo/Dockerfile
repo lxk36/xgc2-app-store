@@ -23,7 +23,7 @@ RUN chmod +x /tmp/install-px4-sitl-deps.sh /usr/local/bin/px4-sitl-entrypoint /u
     && git clone --depth 1 --branch "${PX4_AUTOPILOT_REF}" --recursive "${PX4_AUTOPILOT_REPO}" "${PX4_AUTOPILOT_HOME}" \
     && git -C "${PX4_AUTOPILOT_HOME}" submodule update --init --recursive --depth 1 \
     && cd "${PX4_AUTOPILOT_HOME}" \
-    && bash ./Tools/setup/ubuntu.sh --no-nuttx --no-sim-tools \
+    && bash ./Tools/setup/ubuntu.sh \
     && DONT_RUN=1 make px4_sitl gazebo-classic \
     && rm -f /tmp/install-px4-sitl-deps.sh \
     && apt-get clean \

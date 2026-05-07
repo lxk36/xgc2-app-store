@@ -21,6 +21,13 @@ apt-get install -y --no-install-recommends \
   wget \
   xmlstarlet \
   gazebo11 \
+  gstreamer1.0-libav \
+  gstreamer1.0-plugins-bad \
+  gstreamer1.0-plugins-base \
+  gstreamer1.0-plugins-good \
+  gstreamer1.0-plugins-ugly \
+  libgstreamer1.0-dev \
+  libgstreamer-plugins-base1.0-dev \
   ros-${rosdistro}-gazebo-ros \
   ros-${rosdistro}-mavros \
   ros-${rosdistro}-mavros-extras \
