@@ -16,22 +16,31 @@ if [[ "$base" =~ ^0+$ ]] || ! git cat-file -e "$base" 2>/dev/null; then
   base="$(git hash-object -t tree /dev/null)"
 fi
 
-changed_files="$(git diff --name-only "$base" "$head_ref" || true)"
+changed_files="$(git diff --name-status "$base" "$head_ref" || true)"
 apps=()
+deleted=()
 
 while IFS= read -r file; do
   [[ -z "$file" ]] && continue
-  if [[ "$file" =~ ^apps/([^/]+)/ ]]; then
+  status="${file%%$'\t'*}"
+  path="${file#*$'\t'}"
+  if [[ "$path" =~ ^apps/([^/]+)/ ]]; then
     app="${BASH_REMATCH[1]}"
-    if [[ ! " ${apps[*]} " =~ " ${app} " ]]; then
+    if [[ ! -d "apps/${app}" ]]; then
+      if [[ ! " ${deleted[*]} " =~ " ${app} " ]]; then
+        deleted+=("$app")
+      fi
+    elif [[ "$status" == D* ]]; then
+      if [[ ! " ${apps[*]} " =~ " ${app} " && ! " ${deleted[*]} " =~ " ${app} " ]]; then
+        apps+=("$app")
+      fi
+    elif [[ ! " ${apps[*]} " =~ " ${app} " ]]; then
       apps+=("$app")
     fi
   fi
 done <<<"$changed_files"
 
-if [[ "${#apps[@]}" -eq 0 ]]; then
-  echo "[]"
-  exit 0
-fi
-
-printf '%s\n' "${apps[@]}" | jq -R . | jq -cs .
+jq -n \
+  --argjson apps "$(printf '%s\n' "${apps[@]}" | jq -R 'select(length > 0)' | jq -cs .)" \
+  --argjson deleted "$(printf '%s\n' "${deleted[@]}" | jq -R 'select(length > 0)' | jq -cs .)" \
+  '{apps: $apps, deleted: $deleted}'

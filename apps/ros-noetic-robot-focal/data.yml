@@ -1,27 +1,28 @@
-name: ROS Noetic Desktop Full
-title: Official OSRF ROS Noetic desktop-full image
+name: ROS Noetic Robot Focal
+title: Official ROS Noetic robot image on Ubuntu Focal
 additionalProperties:
-  key: ros-noetic-desktop-full
-  name: ROS Noetic Desktop Full
+  key: ros-noetic-robot-focal
+  name: ROS Noetic Robot Focal
   tags:
     - Robot
-    - Simulation
     - ROS1
     - Base
-  shortDescEn: Official OSRF ROS Noetic desktop-full Docker image.
+  shortDescEn: Official ROS Noetic robot-focal Docker image with multi-architecture support.
   description:
-    en: Official OSRF ROS Noetic desktop-full image for generic ROS1 development and simulation. This app uses the upstream image directly and is not built by XGC2 CI.
+    en: Official ROS Noetic robot image on Ubuntu Focal, mirrored by XGC2 CI for amd64, arm/v7 and arm64 hosts.
   type: base
   crossVersionUpdate: true
   limit: 0
   website: https://wiki.ros.org/noetic
   github: https://github.com/osrf/docker_images
-  document: https://hub.docker.com/r/osrf/ros
+  document: https://hub.docker.com/_/ros
   architectures:
     - amd64
+    - arm/v7
+    - arm64/v8
   batchInstallSupport: true
   formFields:
-    - default: ros-noetic-desktop-full
+    - default: ros-noetic-robot-focal
       envKey: CONTAINER_NAME
       label:
         en: Container name

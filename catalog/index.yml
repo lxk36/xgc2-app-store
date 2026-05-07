@@ -1,5 +1,5 @@
 name: XGC2 App Store
-updatedAt: 2026-05-07
+updatedAt: 2026-05-08
 apps:
   - key: xgc-ros1-runtime
     name: ROS1 Simulation Kit
@@ -38,6 +38,18 @@ apps:
     tags:
       - Robot
       - Simulation
+      - ROS1
+      - Base
+  - key: ros-noetic-robot-focal
+    name: ROS Noetic Robot Focal
+    version: 1.0.0
+    type: base
+    image: ghcr.io/lxk36/xgc2-app-store/ros-noetic-robot-focal:1.0.0
+    app: ../apps/ros-noetic-robot-focal/app.yml
+    data: ../apps/ros-noetic-robot-focal/data.yml
+    compose: ../apps/ros-noetic-robot-focal/docker-compose.yml
+    tags:
+      - Robot
       - ROS1
       - Base
 tags:
