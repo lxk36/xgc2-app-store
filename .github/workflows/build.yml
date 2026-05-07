@@ -120,14 +120,32 @@ jobs:
             echo "No source image configured for apps/${{ matrix.app }}" >&2
             exit 1
           fi
+          source_manifest="$(docker buildx imagetools inspect "${source_image}")"
+          printf '%s\n' "${source_manifest}"
+          if grep -q '^[[:space:]]*-[[:space:]]*amd64[[:space:]]*$' "apps/${{ matrix.app }}/app.yml" && ! grep -q 'linux/amd64' <<<"${source_manifest}"; then
+            echo "Source image ${source_image} does not expose linux/amd64" >&2
+            exit 1
+          fi
+          if grep -q '^[[:space:]]*-[[:space:]]*arm64[[:space:]]*$' "apps/${{ matrix.app }}/app.yml" && ! grep -q 'linux/arm64' <<<"${source_manifest}"; then
+            echo "Source image ${source_image} does not expose linux/arm64" >&2
+            exit 1
+          fi
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            docker buildx imagetools inspect "${source_image}" >/dev/null
             echo "External source image is reachable: ${source_image}"
             exit 0
           fi
           while IFS= read -r tag; do
             [[ -z "${tag}" ]] && continue
             docker buildx imagetools create --tag "${tag}" "${source_image}"
+            target_manifest="$(docker buildx imagetools inspect "${tag}")"
+            if ! grep -q 'linux/amd64' <<<"${target_manifest}"; then
+              echo "Mirrored image ${tag} does not expose linux/amd64" >&2
+              exit 1
+            fi
+            if grep -q '^[[:space:]]*-[[:space:]]*arm64[[:space:]]*$' "apps/${{ matrix.app }}/app.yml" && ! grep -q 'linux/arm64' <<<"${target_manifest}"; then
+              echo "Mirrored image ${tag} does not expose linux/arm64" >&2
+              exit 1
+            fi
           done <<'EOF'
           ${{ steps.meta.outputs.tags }}
           EOF
