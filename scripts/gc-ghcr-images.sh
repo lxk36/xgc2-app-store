@@ -114,8 +114,8 @@ urlencode() {
 }
 
 active_apps_json="$(
-  ruby -ryaml -rjson -e '
-    doc = YAML.load_file(ARGV[0])
+  ruby -ryaml -rjson -rdate -e '
+    doc = YAML.safe_load_file(ARGV[0], permitted_classes: [Date])
     puts Array(doc["apps"]).map { |app| app.fetch("key") }.uniq.to_json
   ' "$catalog"
 )"
