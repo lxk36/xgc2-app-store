@@ -1,0 +1,69 @@
+name: GC stale app images
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: Stale app key to delete, or all
+        required: false
+        default: all
+      keep_last:
+        description: Keep newest N package versions for each stale app
+        required: false
+        default: "0"
+      delete:
+        description: Set to true to delete. Any other value is dry-run.
+        required: false
+        default: "false"
+      owner_type:
+        description: GitHub package owner type, user or org
+        required: false
+        default: user
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  ghcr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect stale GHCR images
+        id: dry-run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          args=(
+            --owner "${{ github.repository_owner }}"
+            --repo "${{ github.event.repository.name }}"
+            --owner-type "${{ github.event.inputs.owner_type }}"
+            --app "${{ github.event.inputs.app }}"
+            --keep-last "${{ github.event.inputs.keep_last }}"
+          )
+          if [[ "${{ github.event.inputs.delete }}" == "true" ]]; then
+            args+=(--delete)
+          fi
+
+          set -o pipefail
+          ./scripts/gc-ghcr-images.sh "${args[@]}" | tee gc-report.txt
+
+          {
+            echo "## GHCR app image GC"
+            echo
+            if [[ "${{ github.event.inputs.delete }}" == "true" ]]; then
+              echo "Mode: delete"
+            else
+              echo "Mode: dry-run"
+            fi
+            echo
+            echo '```text'
+            cat gc-report.txt
+            echo '```'
+            echo
+            echo "Aliyun ACR cleanup is intentionally not automated by this workflow. Use this report to remove matching domestic registry tags after confirming deployments no longer reference them."
+          } >> "$GITHUB_STEP_SUMMARY"

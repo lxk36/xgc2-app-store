@@ -97,6 +97,36 @@ variables -> Actions -> Repository secrets:
 The workflow does not print these values. If any domestic registry setting is
 missing, the GHCR push still works and the domestic push is skipped.
 
+## Image Garbage Collection
+
+Stale image deletion is separated from the normal build workflow. Pushes and
+pull requests never delete registry content.
+
+Use the manual workflow `GC stale app images` to list or delete GHCR packages
+whose app key is no longer present in `catalog/index.yml`.
+
+Default mode is dry-run:
+
+```text
+delete=false
+app=all
+keep_last=0
+```
+
+Set `delete=true` only after confirming deployments no longer reference the old
+app key. `keep_last` can retain the newest package versions for rollback during
+a transition.
+
+The workflow only deletes GHCR package versions. Aliyun ACR cleanup is reported
+as an operator follow-up because it requires separate registry permissions and
+should be confirmed against active deployments.
+
+The same dry-run can be started locally when the `gh` token has `read:packages`:
+
+```bash
+scripts/gc-ghcr-images.sh --owner lxk36 --repo xgc2-app-store
+```
+
 ## Local Smoke
 
 ```bash
