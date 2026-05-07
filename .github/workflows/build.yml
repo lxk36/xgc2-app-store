@@ -116,6 +116,8 @@ jobs:
         if: steps.meta.outputs.buildable == 'false'
         shell: bash
         run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends skopeo
           source_image="${{ steps.meta.outputs.source_image }}"
           if [[ -z "${source_image}" ]]; then
             echo "No source image configured for apps/${{ matrix.app }}" >&2
@@ -133,7 +135,12 @@ jobs:
           fi
           while IFS= read -r tag; do
             [[ -z "${tag}" ]] && continue
-            docker buildx imagetools create --tag "${tag}" "${source_image}"
+            timeout 30m skopeo copy \
+              --authfile "${HOME}/.docker/config.json" \
+              --override-os linux \
+              --override-arch amd64 \
+              "docker://${source_image}" \
+              "docker://${tag}"
             target_manifest="$(docker manifest inspect -v "${tag}")"
             if ! grep -q '"architecture": "amd64"' <<<"${target_manifest}"; then
               echo "Mirrored image ${tag} does not expose linux/amd64" >&2
