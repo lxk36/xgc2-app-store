@@ -1,0 +1,21 @@
+key: xgc-ros1-runtime
+name: XGC ROS1 Runtime
+version: 1.0.0
+image: ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime:1.0.0
+description: ROS Noetic runtime with MAVROS, VRPN, Gazebo Classic and common XGC legacy robot dependencies.
+type: runtime
+tags:
+  - Robot
+  - Simulation
+  - ROS1
+  - Runtime
+architectures:
+  - amd64
+license: Apache-2.0
+source: https://github.com/lxk36/xgc2-app-store
+upstreamReferences:
+  - XGC1 dockerfile.xgc-runtime
+  - XGC1 install_dependencies_main.sh
+entrypoints:
+  shell: /ros_entrypoint.sh
+  healthcheck: /usr/local/bin/xgc-ros1-healthcheck

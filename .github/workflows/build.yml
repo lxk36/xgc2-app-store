@@ -1,0 +1,83 @@
+name: Build changed app images
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: App key to build, or all
+        required: false
+        default: all
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.detect.outputs.apps }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: detect
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.app }}" != "all" ]]; then
+            apps='["${{ github.event.inputs.app }}"]'
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            apps="$(find apps -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | jq -R . | jq -cs .)"
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            apps="$(./scripts/detect-changed-apps.sh "${{ github.event.pull_request.base.sha }}" "${{ github.sha }}")"
+          else
+            apps="$(./scripts/detect-changed-apps.sh "${{ github.event.before }}" "${{ github.sha }}")"
+          fi
+          echo "apps=${apps}" >> "$GITHUB_OUTPUT"
+          echo "Changed apps: ${apps}"
+
+  build:
+    needs: detect
+    if: needs.detect.outputs.apps != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJson(needs.detect.outputs.apps) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        shell: bash
+        run: |
+          version="$(awk -F': ' '/^version:/ {print $2; exit}' "apps/${{ matrix.app }}/app.yml")"
+          image="ghcr.io/${{ github.repository }}/${{ matrix.app }}"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "image=${image,,}" >> "$GITHUB_OUTPUT"
+      - uses: docker/build-push-action@v6
+        with:
+          context: apps/${{ matrix.app }}
+          file: apps/${{ matrix.app }}/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          load: ${{ github.event_name == 'pull_request' }}
+          tags: |
+            ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}
+            ${{ steps.meta.outputs.image }}:latest
+          cache-from: type=gha,scope=${{ matrix.app }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.app }}
+      - name: Smoke image
+        if: github.event_name == 'pull_request'
+        run: |
+          docker run --rm "${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}" bash -lc \
+            'source /opt/ros/noetic/setup.bash && rosversion -d && roscore --help >/dev/null'

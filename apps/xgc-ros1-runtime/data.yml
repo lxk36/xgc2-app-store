@@ -1,0 +1,53 @@
+name: XGC ROS1 Runtime
+title: ROS Noetic runtime for XGC legacy robot stacks
+additionalProperties:
+  key: xgc-ros1-runtime
+  name: XGC ROS1 Runtime
+  tags:
+    - Robot
+    - Simulation
+    - ROS1
+    - Runtime
+  shortDescEn: ROS Noetic, MAVROS, VRPN, Gazebo Classic and common XGC legacy robot dependencies.
+  description:
+    en: ROS Noetic runtime for legacy XGC1-compatible robot stacks without Qt or XGC1 AppImage.
+  type: runtime
+  crossVersionUpdate: true
+  limit: 0
+  website: https://wiki.ros.org/noetic
+  github: https://github.com/lxk36/xgc2-app-store
+  document: https://github.com/lxk36/xgc2-app-store/tree/master/apps/xgc-ros1-runtime
+  architectures:
+    - amd64
+  batchInstallSupport: true
+  formFields:
+    - default: xgc-ros1-runtime
+      envKey: CONTAINER_NAME
+      label:
+        en: Container name
+      required: true
+      type: text
+    - default: http://127.0.0.1:11311
+      envKey: ROS_MASTER_URI
+      label:
+        en: ROS master URI
+      required: true
+      type: text
+    - default: 127.0.0.1
+      envKey: ROS_IP
+      label:
+        en: ROS IP
+      required: true
+      type: text
+    - default: /home/xgc_ws
+      envKey: XGC_WORKSPACE
+      label:
+        en: Workspace mount path
+      required: true
+      type: text
+    - default: /home/xgc_documents
+      envKey: XGC_DOCUMENTS
+      label:
+        en: Documents mount path
+      required: true
+      type: text

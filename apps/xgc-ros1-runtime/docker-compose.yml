@@ -1,0 +1,31 @@
+services:
+  xgc-ros1-runtime:
+    image: ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime:1.0.0
+    container_name: ${CONTAINER_NAME}
+    privileged: true
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      DISPLAY: ${DISPLAY:-}
+      XAUTHORITY: ${XAUTHORITY:-}
+      ROS_MASTER_URI: ${ROS_MASTER_URI}
+      ROS_IP: ${ROS_IP}
+      ROS_HOSTNAME: ${ROS_HOSTNAME:-}
+      NVIDIA_VISIBLE_DEVICES: ${NVIDIA_VISIBLE_DEVICES:-all}
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES:-all}
+      XGC_WORKSPACE: ${XGC_WORKSPACE}
+      XGC_DOCUMENTS: ${XGC_DOCUMENTS}
+    volumes:
+      - /dev:/dev
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XGC_WORKSPACE}:/home/xgc_ws
+      - ${XGC_DOCUMENTS}:/home/xgc_documents
+    stdin_open: true
+    tty: true
+    command: ["bash", "-lc", "source /opt/ros/noetic/setup.bash && sleep infinity"]
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/xgc-ros1-healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s

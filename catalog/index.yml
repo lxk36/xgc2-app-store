@@ -1,0 +1,29 @@
+name: XGC2 App Store
+updatedAt: 2026-05-07
+apps:
+  - key: xgc-ros1-runtime
+    name: XGC ROS1 Runtime
+    version: 1.0.0
+    type: runtime
+    image: ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime:1.0.0
+    app: ../apps/xgc-ros1-runtime/app.yml
+    data: ../apps/xgc-ros1-runtime/data.yml
+    compose: ../apps/xgc-ros1-runtime/docker-compose.yml
+    tags:
+      - Robot
+      - Simulation
+      - ROS1
+      - Runtime
+tags:
+  - key: Robot
+    name: Robot
+    sort: 10
+  - key: Simulation
+    name: Simulation
+    sort: 20
+  - key: ROS1
+    name: ROS1
+    sort: 30
+  - key: Runtime
+    name: Runtime
+    sort: 40

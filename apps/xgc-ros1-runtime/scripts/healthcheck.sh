@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source /opt/ros/noetic/setup.bash
+test "$(rosversion -d)" = "noetic"
+command -v roscore >/dev/null
+command -v gazebo >/dev/null
+test -x /opt/ros/noetic/lib/mavros/mavros_node
