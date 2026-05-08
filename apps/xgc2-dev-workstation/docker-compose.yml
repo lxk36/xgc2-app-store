@@ -13,7 +13,7 @@ services:
       SOURCE_WORKSPACE: ${SOURCE_WORKSPACE}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${SOURCE_WORKSPACE}:/workspace
+      - ${XGC_HOST_WORKSPACE_DIR}/${SOURCE_WORKSPACE}:/workspace
       - ${DOCKER_SOCKET}:/var/run/docker.sock
     stdin_open: true
     tty: true

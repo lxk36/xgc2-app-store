@@ -7,7 +7,7 @@ services:
     environment:
       ROS2_WORKSPACE: ${ROS2_WORKSPACE}
     volumes:
-      - ${ROS2_WORKSPACE}:/workspace
+      - ${XGC_HOST_WORKSPACE_DIR}/${ROS2_WORKSPACE}:/workspace
     stdin_open: true
     tty: true
     command: ["bash", "-lc", "source /opt/ros/jazzy/setup.bash && sleep infinity"]

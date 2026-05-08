@@ -28,9 +28,9 @@ additionalProperties:
         en: Container name
       required: true
       type: text
-    - default: /tmp/ros_ws
+    - default: xgc2-ros1-ws
       envKey: ROS_WORKSPACE
       label:
-        en: Workspace mount path
+        en: Workspace directory under XGC host workspace
       required: true
       type: text

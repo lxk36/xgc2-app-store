@@ -39,15 +39,15 @@ additionalProperties:
         en: ROS IP
       required: true
       type: text
-    - default: /home/xgc_ws
+    - default: xgc2-ros1-ws
       envKey: XGC_WORKSPACE
       label:
-        en: Workspace mount path
+        en: Workspace directory under XGC host workspace
       required: true
       type: text
-    - default: /home/xgc_documents
+    - default: XGC/Documents
       envKey: XGC_DOCUMENTS
       label:
-        en: Documents mount path
+        en: Documents directory under XGC host workspace
       required: true
       type: text

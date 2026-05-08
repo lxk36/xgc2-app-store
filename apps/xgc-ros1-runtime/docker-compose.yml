@@ -18,8 +18,8 @@ services:
     volumes:
       - /dev:/dev
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${XGC_WORKSPACE}:/home/xgc_ws
-      - ${XGC_DOCUMENTS}:/home/xgc_documents
+      - ${XGC_HOST_WORKSPACE_DIR}/${XGC_WORKSPACE}:/home/xgc_ws
+      - ${XGC_HOST_WORKSPACE_DIR}/${XGC_DOCUMENTS}:/home/xgc_documents
     stdin_open: true
     tty: true
     command: ["bash", "-lc", "source /opt/ros/noetic/setup.bash && sleep infinity"]

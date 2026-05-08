@@ -44,9 +44,9 @@ additionalProperties:
         en: User GID
       required: true
       type: number
-    - default: /tmp/gazebo_ws
+    - default: xgc2-ros2-ws
       envKey: SIM_WORKSPACE
       label:
-        en: Simulation workspace
+        en: Simulation workspace directory under XGC host workspace
       required: true
       type: text

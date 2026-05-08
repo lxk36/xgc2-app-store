@@ -45,10 +45,10 @@ additionalProperties:
         en: User GID
       required: true
       type: number
-    - default: /tmp/xgc2_source
+    - default: xgc2
       envKey: SOURCE_WORKSPACE
       label:
-        en: Source workspace
+        en: Source workspace directory under XGC host workspace
       required: true
       type: text
     - default: /var/run/docker.sock

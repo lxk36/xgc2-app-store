@@ -13,7 +13,7 @@ services:
       SIM_WORKSPACE: ${SIM_WORKSPACE}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${SIM_WORKSPACE}:/workspace
+      - ${XGC_HOST_WORKSPACE_DIR}/${SIM_WORKSPACE}:/workspace
     stdin_open: true
     tty: true
     command: ["bash"]
