@@ -10,11 +10,13 @@ services:
       XAUTHORITY: ${XAUTHORITY:-}
       PX4_AUTOPILOT_HOME: /root/PX4-Autopilot
       PX4_SITL_HOME: /root/PX4-Autopilot
+      PX4_WORKSPACE: ${PX4_WORKSPACE}
       PX4_LOG_DIR: ${PX4_LOG_DIR}
     volumes:
       - /dev:/dev
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${PX4_LOG_DIR}:/var/log/px4_sitl
+      - ${XGC_HOST_WORKSPACE_DIR}/${PX4_WORKSPACE}:/workspace
+      - ${XGC_HOST_WORKSPACE_DIR}/${PX4_LOG_DIR}:/var/log/px4_sitl
     stdin_open: true
     tty: true
     command: ["bash", "-lc", "source /opt/ros/noetic/setup.bash && sleep infinity"]

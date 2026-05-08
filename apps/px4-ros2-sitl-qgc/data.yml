@@ -45,9 +45,15 @@ additionalProperties:
         en: User GID
       required: true
       type: number
-    - default: /tmp/px4_logs
+    - default: xgc2-ros2-ws
+      envKey: PX4_WORKSPACE
+      label:
+        en: PX4 workspace directory under XGC host workspace
+      required: true
+      type: text
+    - default: XGC/Logs/px4-ros2-sitl-qgc
       envKey: PX4_LOG_DIR
       label:
-        en: PX4 log directory
+        en: PX4 log directory under XGC host workspace
       required: true
       type: text

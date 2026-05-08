@@ -11,13 +11,15 @@ services:
       XGC_USER: ${XGC_USER}
       USER_UID: ${USER_UID}
       USER_GID: ${USER_GID}
+      PX4_WORKSPACE: ${PX4_WORKSPACE}
       PX4_LOG_DIR: ${PX4_LOG_DIR}
       NVIDIA_VISIBLE_DEVICES: ${NVIDIA_VISIBLE_DEVICES:-all}
       NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES:-all}
     volumes:
       - /dev:/dev
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${PX4_LOG_DIR}:/var/log/px4
+      - ${XGC_HOST_WORKSPACE_DIR}/${PX4_WORKSPACE}:/workspace
+      - ${XGC_HOST_WORKSPACE_DIR}/${PX4_LOG_DIR}:/var/log/px4
     stdin_open: true
     tty: true
     command: ["bash"]

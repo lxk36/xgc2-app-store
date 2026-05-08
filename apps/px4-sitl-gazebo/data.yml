@@ -26,9 +26,15 @@ additionalProperties:
         en: Container name
       required: true
       type: text
-    - default: /tmp/xgc_px4_logs
+    - default: xgc2-ros1-ws
+      envKey: PX4_WORKSPACE
+      label:
+        en: PX4 workspace directory under XGC host workspace
+      required: true
+      type: text
+    - default: XGC/Logs/px4-sitl-gazebo
       envKey: PX4_LOG_DIR
       label:
-        en: Log directory
+        en: Log directory under XGC host workspace
       required: true
       type: text
