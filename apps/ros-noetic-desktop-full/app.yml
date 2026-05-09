@@ -6,8 +6,8 @@ upstreamImage: osrf/ros:noetic-desktop-full
 description: Official OSRF ROS Noetic desktop-full image mirrored for generic ROS1 development and simulation.
 type: development
 tags:
-  - ROS1
-  - Desktop
+  - Noetic
+  - RViz
 architectures:
   - amd64
 license: BSD-3-Clause

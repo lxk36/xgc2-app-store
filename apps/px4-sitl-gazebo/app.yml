@@ -5,9 +5,10 @@ image: ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo:1.0.3
 description: PX4 software-in-the-loop simulation toolkit for Gazebo Classic and ROS Noetic.
 type: simulation
 tags:
-  - PX4
-  - Gazebo
-  - SITL
+  - Noetic
+  - PX4-SITL
+  - Gazebo Classic
+  - MAVROS
 architectures:
   - amd64
 license: Apache-2.0

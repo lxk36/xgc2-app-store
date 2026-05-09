@@ -5,10 +5,9 @@ image: ghcr.io/lxk36/xgc2-app-store/xgc2-dev-workstation:1.0.0
 description: ROS 2 Jazzy development workstation with Qt development packages and Docker CLI for source-level XGC2 work.
 type: development
 tags:
-  - ROS2
+  - Jazzy
   - Qt
-  - Docker
-  - Desktop
+  - QGroundControl
 architectures:
   - amd64
 license: Apache-2.0

@@ -6,9 +6,8 @@ upstreamImage: osrf/ros:jazzy-desktop-full
 description: Official OSRF ROS 2 Jazzy desktop-full image mirrored for desktop development and simulation use.
 type: development
 tags:
-  - ROS2
   - Jazzy
-  - Desktop
+  - RViz
 architectures:
   - amd64
 license: BSD-3-Clause

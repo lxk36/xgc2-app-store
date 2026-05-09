@@ -4,9 +4,9 @@ additionalProperties:
   key: ros2-jazzy-dev-base
   name: ROS2 Jazzy Development Base
   tags:
-    - ROS2
     - Jazzy
     - MAVROS
+    - VRPN
     - PlotJuggler
   shortDescEn: ROS 2 Jazzy desktop base with ground-station development tools.
   description:

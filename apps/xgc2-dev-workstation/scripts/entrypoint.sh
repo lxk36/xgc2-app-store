@@ -9,6 +9,10 @@ if [[ "$(id -u)" == "0" ]]; then
   if ! getent group "${gid}" >/dev/null; then
     groupadd -g "${gid}" "${user}"
   fi
+  existing_user="$(getent passwd "${uid}" | cut -d: -f1 || true)"
+  if [[ -n "${existing_user}" && "${existing_user}" != "${user}" ]]; then
+    user="${existing_user}"
+  fi
   if ! id "${user}" >/dev/null 2>&1; then
     useradd -m -u "${uid}" -g "${gid}" -s /bin/bash "${user}"
   else

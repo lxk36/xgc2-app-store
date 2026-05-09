@@ -4,10 +4,7 @@ additionalProperties:
   key: ros-jazzy-ros-base-noble
   name: ROS Jazzy Base Noble
   tags:
-    - ROS2
     - Jazzy
-    - Multiarch
-    - Robot
   shortDescEn: Official ROS 2 Jazzy ros-base Docker image with multi-architecture support.
   description:
     en: Official ROS 2 Jazzy ros-base image on Ubuntu Noble, mirrored by XGC2 CI for amd64 and arm64 hosts.

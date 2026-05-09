@@ -5,10 +5,10 @@ image: ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime:1.1.0
 description: Curated ROS Noetic simulation toolkit with MAVROS, VRPN, Gazebo Classic and core robot visualization dependencies.
 type: simulation
 tags:
-  - ROS1
+  - Noetic
   - MAVROS
   - VRPN
-  - Gazebo
+  - Gazebo Classic
 architectures:
   - amd64
 license: Apache-2.0

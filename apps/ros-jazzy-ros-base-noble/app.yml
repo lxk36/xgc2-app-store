@@ -6,10 +6,7 @@ upstreamImage: ros:jazzy-ros-base-noble
 description: Official ROS 2 Jazzy ros-base image on Ubuntu Noble, mirrored with its upstream multi-architecture manifest.
 type: deployment
 tags:
-  - ROS2
   - Jazzy
-  - Multiarch
-  - Robot
 architectures:
   - amd64
   - arm64/v8

@@ -4,10 +4,9 @@ additionalProperties:
   key: xgc2-dev-workstation
   name: XGC2 Development Workstation
   tags:
-    - ROS2
+    - Jazzy
     - Qt
-    - Docker
-    - Desktop
+    - QGroundControl
   shortDescEn: ROS 2 Jazzy workstation with Qt development packages and Docker CLI.
   description:
     en: Public CI-built development image for source-level XGC2 work. It replaces the old local Qt-source bind-mount image with a reproducible package-based workstation.

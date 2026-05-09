@@ -6,9 +6,7 @@ upstreamImage: ros:noetic-robot-focal
 description: Official ROS Noetic robot image on Ubuntu Focal, mirrored with its upstream multi-architecture manifest.
 type: deployment
 tags:
-  - ROS1
-  - Multiarch
-  - Robot
+  - Noetic
 architectures:
   - amd64
   - arm/v7

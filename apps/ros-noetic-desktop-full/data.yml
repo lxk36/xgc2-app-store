@@ -4,8 +4,8 @@ additionalProperties:
   key: ros-noetic-desktop-full
   name: ROS Noetic Desktop Full
   tags:
-    - ROS1
-    - Desktop
+    - Noetic
+    - RViz
   shortDescEn: Official OSRF ROS Noetic desktop-full Docker image.
   description:
     en: Official OSRF ROS Noetic desktop-full image for generic ROS1 development and simulation. This app uses the upstream image directly and is not built by XGC2 CI.

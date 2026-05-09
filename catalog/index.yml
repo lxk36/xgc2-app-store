@@ -10,10 +10,10 @@ apps:
     data: ../apps/xgc-ros1-runtime/data.yml
     compose: ../apps/xgc-ros1-runtime/docker-compose.yml
     tags:
-      - ROS1
+      - Noetic
       - MAVROS
       - VRPN
-      - Gazebo
+      - Gazebo Classic
   - key: px4-sitl-gazebo
     name: PX4 SITL Gazebo
     version: 1.0.3
@@ -23,9 +23,10 @@ apps:
     data: ../apps/px4-sitl-gazebo/data.yml
     compose: ../apps/px4-sitl-gazebo/docker-compose.yml
     tags:
-      - PX4
-      - Gazebo
-      - SITL
+      - Noetic
+      - PX4-SITL
+      - Gazebo Classic
+      - MAVROS
   - key: ros-noetic-desktop-full
     name: ROS Noetic Desktop Full
     version: 1.0.0
@@ -35,8 +36,8 @@ apps:
     data: ../apps/ros-noetic-desktop-full/data.yml
     compose: ../apps/ros-noetic-desktop-full/docker-compose.yml
     tags:
-      - ROS1
-      - Desktop
+      - Noetic
+      - RViz
   - key: ros-noetic-robot-focal
     name: ROS Noetic Robot Focal
     version: 1.0.0
@@ -46,9 +47,7 @@ apps:
     data: ../apps/ros-noetic-robot-focal/data.yml
     compose: ../apps/ros-noetic-robot-focal/docker-compose.yml
     tags:
-      - ROS1
-      - Multiarch
-      - Robot
+      - Noetic
   - key: ros2-jazzy-dev-base
     name: ROS2 Jazzy Development Base
     version: 1.0.0
@@ -58,9 +57,9 @@ apps:
     data: ../apps/ros2-jazzy-dev-base/data.yml
     compose: ../apps/ros2-jazzy-dev-base/docker-compose.yml
     tags:
-      - ROS2
       - Jazzy
       - MAVROS
+      - VRPN
       - PlotJuggler
   - key: gazebo-harmonic-ros2
     name: Gazebo Harmonic ROS2 Bridge
@@ -71,21 +70,21 @@ apps:
     data: ../apps/gazebo-harmonic-ros2/data.yml
     compose: ../apps/gazebo-harmonic-ros2/docker-compose.yml
     tags:
-      - ROS2
-      - Gazebo
-      - Harmonic
+      - Jazzy
+      - Gazebo Harmonic
+      - ros-gz
   - key: px4-ros2-sitl-qgc
     name: PX4 ROS2 SITL with QGC
-    version: 1.0.1
+    version: 1.0.2
     type: simulation
-    image: ghcr.io/lxk36/xgc2-app-store/px4-ros2-sitl-qgc:1.0.1
+    image: ghcr.io/lxk36/xgc2-app-store/px4-ros2-sitl-qgc:1.0.2
     app: ../apps/px4-ros2-sitl-qgc/app.yml
     data: ../apps/px4-ros2-sitl-qgc/data.yml
     compose: ../apps/px4-ros2-sitl-qgc/docker-compose.yml
     tags:
-      - ROS2
-      - PX4
-      - SITL
+      - Jazzy
+      - PX4-SITL
+      - Micro XRCE-DDS
       - QGroundControl
   - key: xgc2-dev-workstation
     name: XGC2 Development Workstation
@@ -96,10 +95,9 @@ apps:
     data: ../apps/xgc2-dev-workstation/data.yml
     compose: ../apps/xgc2-dev-workstation/docker-compose.yml
     tags:
-      - ROS2
+      - Jazzy
       - Qt
-      - Docker
-      - Desktop
+      - QGroundControl
   - key: ros-jazzy-desktop-full
     name: ROS Jazzy Desktop Full
     version: 1.0.0
@@ -109,9 +107,8 @@ apps:
     data: ../apps/ros-jazzy-desktop-full/data.yml
     compose: ../apps/ros-jazzy-desktop-full/docker-compose.yml
     tags:
-      - ROS2
       - Jazzy
-      - Desktop
+      - RViz
   - key: ros-jazzy-ros-base-noble
     name: ROS Jazzy Base Noble
     version: 1.0.0
@@ -121,10 +118,7 @@ apps:
     data: ../apps/ros-jazzy-ros-base-noble/data.yml
     compose: ../apps/ros-jazzy-ros-base-noble/docker-compose.yml
     tags:
-      - ROS2
       - Jazzy
-      - Multiarch
-      - Robot
 tags:
   - key: Simulation
     name: Simulation

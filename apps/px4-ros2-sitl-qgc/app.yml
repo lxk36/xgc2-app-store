@@ -1,13 +1,13 @@
 key: px4-ros2-sitl-qgc
 name: PX4 ROS2 SITL with QGC
-version: 1.0.1
-image: ghcr.io/lxk36/xgc2-app-store/px4-ros2-sitl-qgc:1.0.1
+version: 1.0.2
+image: ghcr.io/lxk36/xgc2-app-store/px4-ros2-sitl-qgc:1.0.2
 description: PX4 ROS 2 SITL development image with Micro XRCE-DDS Agent and QGroundControl AppImage included.
 type: simulation
 tags:
-  - ROS2
-  - PX4
-  - SITL
+  - Jazzy
+  - PX4-SITL
+  - Micro XRCE-DDS
   - QGroundControl
 architectures:
   - amd64

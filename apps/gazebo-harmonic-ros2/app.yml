@@ -5,9 +5,9 @@ image: ghcr.io/lxk36/xgc2-app-store/gazebo-harmonic-ros2:1.0.0
 description: Gazebo Harmonic with ROS 2 Jazzy integration for simulation workloads.
 type: simulation
 tags:
-  - ROS2
-  - Gazebo
-  - Harmonic
+  - Jazzy
+  - Gazebo Harmonic
+  - ros-gz
 architectures:
   - amd64
 license: Apache-2.0

@@ -4,9 +4,9 @@ additionalProperties:
   key: px4-ros2-sitl-qgc
   name: PX4 ROS2 SITL with QGC
   tags:
-    - ROS2
-    - PX4
-    - SITL
+    - Jazzy
+    - PX4-SITL
+    - Micro XRCE-DDS
     - QGroundControl
   shortDescEn: PX4 ROS 2 SITL tooling with QGroundControl already baked into the image.
   description:

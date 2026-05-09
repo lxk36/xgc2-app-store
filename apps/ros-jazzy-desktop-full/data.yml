@@ -4,9 +4,8 @@ additionalProperties:
   key: ros-jazzy-desktop-full
   name: ROS Jazzy Desktop Full
   tags:
-    - ROS2
     - Jazzy
-    - Desktop
+    - RViz
   shortDescEn: Official OSRF ROS 2 Jazzy desktop-full Docker image.
   description:
     en: Official OSRF ROS 2 Jazzy desktop-full image mirrored by XGC2 CI for desktop development and simulation use.
