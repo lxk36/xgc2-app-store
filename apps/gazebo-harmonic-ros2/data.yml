@@ -50,3 +50,15 @@ additionalProperties:
         en: Simulation workspace directory under XGC host workspace
       required: true
       type: text
+    - default: all
+      envKey: NVIDIA_VISIBLE_DEVICES
+      label:
+        en: NVIDIA visible devices
+      required: true
+      type: text
+    - default: all
+      envKey: NVIDIA_DRIVER_CAPABILITIES
+      label:
+        en: NVIDIA driver capabilities
+      required: true
+      type: text

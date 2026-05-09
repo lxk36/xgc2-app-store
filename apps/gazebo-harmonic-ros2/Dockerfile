@@ -26,6 +26,15 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     && chmod +x /usr/local/bin/xgc-entrypoint /usr/local/bin/gazebo-harmonic-healthcheck \
     && rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /usr/share/glvnd/egl_vendor.d \
+    && printf '%s\n' \
+      '{' \
+      '    "file_format_version" : "1.0.0",' \
+      '    "ICD" : {' \
+      '        "library_path" : "libEGL_nvidia.so.0"' \
+      '    }' \
+      '}' > /usr/share/glvnd/egl_vendor.d/10_nvidia.json
+
 WORKDIR /workspace
 ENTRYPOINT ["/usr/local/bin/xgc-entrypoint"]
 CMD ["bash"]

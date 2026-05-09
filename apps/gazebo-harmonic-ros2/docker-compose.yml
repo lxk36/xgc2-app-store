@@ -1,12 +1,17 @@
 services:
   gazebo-harmonic-ros2:
-    image: ghcr.io/lxk36/xgc2-app-store/gazebo-harmonic-ros2:1.0.0
+    image: ghcr.io/lxk36/xgc2-app-store/gazebo-harmonic-ros2:1.0.1
     container_name: ${CONTAINER_NAME}
     network_mode: host
     restart: unless-stopped
+    gpus: ${NVIDIA_VISIBLE_DEVICES:-all}
     environment:
       DISPLAY: ${DISPLAY:-}
       XAUTHORITY: ${XAUTHORITY:-}
+      NVIDIA_VISIBLE_DEVICES: ${NVIDIA_VISIBLE_DEVICES:-all}
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES:-all}
+      __GLX_VENDOR_LIBRARY_NAME: nvidia
+      __EGL_VENDOR_LIBRARY_FILENAMES: /usr/share/glvnd/egl_vendor.d/10_nvidia.json
       XGC_USER: ${XGC_USER}
       USER_UID: ${USER_UID}
       USER_GID: ${USER_GID}
@@ -14,6 +19,8 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${XGC_HOST_WORKSPACE_DIR}/${SIM_WORKSPACE}:/workspace
+    devices:
+      - /dev/dri:/dev/dri
     stdin_open: true
     tty: true
     command: ["bash"]
