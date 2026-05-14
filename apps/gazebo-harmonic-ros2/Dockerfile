@@ -17,11 +17,26 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update \
     && apt-get install -y --no-install-recommends \
       ca-certificates \
+      build-essential \
+      cmake \
       curl \
       git \
       gosu \
       iputils-ping \
+      libeigen3-dev \
+      pkg-config \
+      python3-colcon-common-extensions \
+      ros-jazzy-fastcdr \
+      ros-jazzy-fastrtps \
+      ros-jazzy-fastrtps-cmake-module \
+      ros-jazzy-rmw-fastrtps-cpp \
+      ros-jazzy-rmw-fastrtps-shared-cpp \
+      ros-jazzy-rosidl-dynamic-typesupport-fastrtps \
+      ros-jazzy-rosidl-typesupport-fastrtps-c \
+      ros-jazzy-rosidl-typesupport-fastrtps-cpp \
       ros-jazzy-ros-gz \
+      ros-jazzy-rviz2 \
+      ros-jazzy-visualization-msgs \
       sudo \
     && chmod +x /usr/local/bin/xgc-entrypoint /usr/local/bin/gazebo-harmonic-healthcheck \
     && rm -rf /var/lib/apt/lists/*

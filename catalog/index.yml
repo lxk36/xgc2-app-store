@@ -63,9 +63,9 @@ apps:
       - PlotJuggler
   - key: gazebo-harmonic-ros2
     name: Gazebo Harmonic ROS2 Bridge
-    version: 1.0.1
+    version: 1.0.2
     type: simulation
-    image: ghcr.io/lxk36/xgc2-app-store/gazebo-harmonic-ros2:1.0.1
+    image: ghcr.io/lxk36/xgc2-app-store/gazebo-harmonic-ros2:1.0.2
     app: ../apps/gazebo-harmonic-ros2/app.yml
     data: ../apps/gazebo-harmonic-ros2/data.yml
     compose: ../apps/gazebo-harmonic-ros2/docker-compose.yml
