@@ -1,4 +1,4 @@
-FROM ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime:1.2.0
+FROM ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime:1.2.1
 
 LABEL org.opencontainers.image.title="XGC1 Focal Noetic Qt Builder"
 LABEL org.opencontainers.image.description="Multi-architecture ROS Noetic build image with Qt 5.15.2 compiled from source for XGC1 packaging."

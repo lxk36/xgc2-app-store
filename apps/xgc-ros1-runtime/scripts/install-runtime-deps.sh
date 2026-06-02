@@ -30,6 +30,7 @@ apt-get install -y --no-install-recommends \
   ros-${rosdistro}-mavros-extras \
   ros-${rosdistro}-robot-state-publisher \
   ros-${rosdistro}-rviz \
+  ros-${rosdistro}-tf-conversions \
   ros-${rosdistro}-vrpn-client-ros \
   ros-${rosdistro}-xacro
 
