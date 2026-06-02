@@ -1,0 +1,21 @@
+key: xgc1-focal-noetic-qt-builder
+name: XGC1 Focal Noetic Qt Builder
+version: 1.0.0
+image: ghcr.io/lxk36/xgc2-app-store/xgc1-focal-noetic-qt-builder:1.0.0
+description: Multi-architecture ROS Noetic build image with Qt 5.15.2 compiled from source for XGC1 packaging.
+type: development
+tags:
+  - Noetic
+  - Qt
+  - XGC1
+architectures:
+  - amd64
+  - arm64/v8
+license: Apache-2.0
+source: https://github.com/lxk36/xgc2-app-store
+upstreamReferences:
+  - XGC1 dockerfile.xgc-devel
+  - Qt 5.15.2 source archive
+entrypoints:
+  shell: /ros_entrypoint.sh
+  healthcheck: /usr/local/bin/xgc1-qt-builder-healthcheck

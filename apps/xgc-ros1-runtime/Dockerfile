@@ -1,4 +1,4 @@
-FROM osrf/ros:noetic-desktop-full
+FROM ros:noetic-ros-base-focal
 
 LABEL org.opencontainers.image.title="ROS1 Simulation Kit"
 LABEL org.opencontainers.image.description="Curated ROS Noetic simulation toolkit with MAVROS, VRPN, Gazebo Classic and core robot visualization dependencies."

@@ -26,6 +26,9 @@ jobs:
     outputs:
       apps: ${{ steps.detect.outputs.apps }}
       deleted: ${{ steps.detect.outputs.deleted }}
+      build_matrix: ${{ steps.detect.outputs.build_matrix }}
+      mirror_matrix: ${{ steps.detect.outputs.mirror_matrix }}
+      manifest_matrix: ${{ steps.detect.outputs.manifest_matrix }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,6 +36,8 @@ jobs:
       - id: detect
         shell: bash
         run: |
+          set -euo pipefail
+
           if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.app }}" != "all" ]]; then
             result='{"apps":["${{ github.event.inputs.app }}"],"deleted":[]}'
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
@@ -43,12 +48,79 @@ jobs:
           else
             result="$(./scripts/detect-changed-apps.sh "${{ github.event.before }}" "${{ github.sha }}")"
           fi
+
           apps="$(jq -c '.apps' <<<"${result}")"
           deleted="$(jq -c '.deleted' <<<"${result}")"
           echo "apps=${apps}" >> "$GITHUB_OUTPUT"
           echo "deleted=${deleted}" >> "$GITHUB_OUTPUT"
           echo "Changed apps: ${apps}"
           echo "Deleted apps: ${deleted}"
+
+          ruby -ryaml -rjson - "${apps}" <<'RUBY'
+          apps = JSON.parse(ARGV[0])
+          repository = ENV.fetch("GITHUB_REPOSITORY").downcase
+
+          def native_arch_entry(arch)
+            case arch
+            when "amd64", "linux/amd64"
+              { "arch" => "amd64", "platform" => "linux/amd64", "runner" => "ubuntu-latest" }
+            when "arm64", "arm64/v8", "linux/arm64", "linux/arm64/v8"
+              { "arch" => "arm64", "platform" => "linux/arm64", "runner" => "ubuntu-24.04-arm" }
+            else
+              raise "buildable app requests unsupported native architecture: #{arch}"
+            end
+          end
+
+          build = []
+          mirror = []
+          manifest = []
+
+          apps.each do |app|
+            app_file = "apps/#{app}/app.yml"
+            raise "missing #{app_file}" unless File.exist?(app_file)
+
+            doc = YAML.safe_load_file(app_file)
+            version = doc.fetch("version")
+            image = "ghcr.io/#{repository}/#{app}"
+            architectures = Array(doc["architectures"] || ["amd64"])
+            buildable = File.exist?("apps/#{app}/Dockerfile")
+
+            if buildable
+              entries = architectures.map { |arch| native_arch_entry(arch) }
+              multiarch = entries.length > 1
+              entries.each do |entry|
+                build << entry.merge(
+                  "app" => app,
+                  "version" => version,
+                  "image" => image,
+                  "multiarch" => multiarch
+                )
+              end
+              if multiarch
+                manifest << {
+                  "app" => app,
+                  "version" => version,
+                  "image" => image,
+                  "arches" => entries.map { |entry| entry["arch"] }
+                }
+              end
+            else
+              mirror << {
+                "app" => app,
+                "version" => version,
+                "image" => image,
+                "source_image" => doc["upstreamImage"] || doc["image"],
+                "architectures" => architectures
+              }
+            end
+          end
+
+          File.open(ENV.fetch("GITHUB_OUTPUT"), "a") do |out|
+            out.puts "build_matrix=#{JSON.generate({ "include" => build })}"
+            out.puts "mirror_matrix=#{JSON.generate({ "include" => mirror })}"
+            out.puts "manifest_matrix=#{JSON.generate({ "include" => manifest })}"
+          end
+          RUBY
 
   deleted:
     needs: detect
@@ -61,8 +133,8 @@ jobs:
 
   build:
     needs: detect
-    if: needs.detect.outputs.apps != '[]'
-    runs-on: ubuntu-latest
+    if: needs.detect.outputs.build_matrix != '{"include":[]}'
+    runs-on: ${{ matrix.runner }}
     env:
       XGC_CN_REGISTRY: ${{ secrets.XGC_CN_REGISTRY }}
       XGC_CN_NAMESPACE: ${{ secrets.XGC_CN_NAMESPACE }}
@@ -70,11 +142,9 @@ jobs:
       XGC_CN_PASSWORD: ${{ secrets.XGC_CN_PASSWORD }}
     strategy:
       fail-fast: false
-      matrix:
-        app: ${{ fromJson(needs.detect.outputs.apps) }}
+      matrix: ${{ fromJson(needs.detect.outputs.build_matrix) }}
     steps:
       - uses: actions/checkout@v4
-      - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
       - uses: docker/login-action@v3
         if: github.event_name != 'pull_request'
@@ -88,158 +158,192 @@ jobs:
           registry: ${{ env.XGC_CN_REGISTRY }}
           username: ${{ env.XGC_CN_USERNAME }}
           password: ${{ env.XGC_CN_PASSWORD }}
-      - id: meta
+
+      - id: tags
         shell: bash
         run: |
-          version="$(awk -F': ' '/^version:/ {print $2; exit}' "apps/${{ matrix.app }}/app.yml")"
-          source_image="$(awk -F': ' '/^upstreamImage:/ {print $2; exit}' "apps/${{ matrix.app }}/app.yml")"
-          if [[ -z "${source_image}" ]]; then
-            source_image="$(awk -F': ' '/^image:/ {print $2; exit}' "apps/${{ matrix.app }}/app.yml")"
-          fi
-          ghcr_image="ghcr.io/${{ github.repository }}/${{ matrix.app }}"
-          ghcr_image="${ghcr_image,,}"
-          echo "version=${version}" >> "$GITHUB_OUTPUT"
-          echo "image=${ghcr_image}" >> "$GITHUB_OUTPUT"
-          echo "source_image=${source_image}" >> "$GITHUB_OUTPUT"
-          arches="$(ruby -ryaml -e 'doc = YAML.safe_load_file(ARGV[0]); puts Array(doc["architectures"] || ["amd64"]).join(",")' "apps/${{ matrix.app }}/app.yml")"
-          platforms=()
-          IFS=',' read -ra arch_list <<<"${arches}"
-          for arch in "${arch_list[@]}"; do
-            case "${arch}" in
-              amd64|linux/amd64) platforms+=("linux/amd64") ;;
-              arm64|linux/arm64) platforms+=("linux/arm64") ;;
-              arm64/v8|linux/arm64/v8) platforms+=("linux/arm64/v8") ;;
-              arm/v7|linux/arm/v7) platforms+=("linux/arm/v7") ;;
-              *) echo "Unsupported architecture ${arch}" >&2; exit 1 ;;
-            esac
-          done
-          platform_csv="$(printf '%s\n' "${platforms[@]}" | awk '!seen[$0]++' | paste -sd, -)"
-          echo "platforms=${platform_csv}" >> "$GITHUB_OUTPUT"
-          if [[ "${platform_csv}" == *,* ]]; then
-            echo "multiarch=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "multiarch=false" >> "$GITHUB_OUTPUT"
-          fi
-          if [[ -f "apps/${{ matrix.app }}/Dockerfile" ]]; then
-            echo "buildable=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "buildable=false" >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+
+          tags="${{ matrix.image }}:${{ matrix.version }}-${{ matrix.arch }}"$'\n'"${{ matrix.image }}:latest-${{ matrix.arch }}"
+          if [[ "${{ matrix.multiarch }}" != "true" ]]; then
+            tags="${tags}"$'\n'"${{ matrix.image }}:${{ matrix.version }}"$'\n'"${{ matrix.image }}:latest"
           fi
 
-          tags="${ghcr_image}:${version}"$'\n'"${ghcr_image}:latest"
           if [[ "${{ github.event_name }}" != "pull_request" && -n "${XGC_CN_REGISTRY}" && -n "${XGC_CN_NAMESPACE}" && -n "${XGC_CN_USERNAME}" && -n "${XGC_CN_PASSWORD}" ]]; then
             cn_registry="${XGC_CN_REGISTRY%/}"
             cn_namespace="${XGC_CN_NAMESPACE#/}"
             cn_namespace="${cn_namespace%/}"
             cn_image="${cn_registry}/${cn_namespace}/${{ matrix.app }}"
-            tags="${tags}"$'\n'"${cn_image}:${version}"$'\n'"${cn_image}:latest"
+            tags="${tags}"$'\n'"${cn_image}:${{ matrix.version }}-${{ matrix.arch }}"$'\n'"${cn_image}:latest-${{ matrix.arch }}"
+            if [[ "${{ matrix.multiarch }}" != "true" ]]; then
+              tags="${tags}"$'\n'"${cn_image}:${{ matrix.version }}"$'\n'"${cn_image}:latest"
+            fi
           fi
+
           {
             echo "tags<<EOF"
             printf '%s\n' "${tags}"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
+
       - uses: docker/build-push-action@v6
-        if: steps.meta.outputs.buildable == 'true'
         with:
           context: apps/${{ matrix.app }}
           file: apps/${{ matrix.app }}/Dockerfile
-          platforms: ${{ steps.meta.outputs.platforms }}
+          platforms: ${{ matrix.platform }}
           push: ${{ github.event_name != 'pull_request' }}
           load: ${{ github.event_name == 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=gha,scope=${{ matrix.app }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.app }}
-      - name: Mirror external image
-        if: steps.meta.outputs.buildable == 'false'
+          tags: ${{ steps.tags.outputs.tags }}
+          cache-from: type=gha,scope=${{ matrix.app }}-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.app }}-${{ matrix.arch }}
+
+      - name: Smoke image
+        if: github.event_name == 'pull_request'
         shell: bash
         run: |
+          set -euo pipefail
+          healthcheck="$(ruby -ryaml -e 'doc = YAML.safe_load_file(ARGV[0]); puts doc.dig("entrypoints", "healthcheck").to_s' "apps/${{ matrix.app }}/app.yml")"
+          if [[ -z "${healthcheck}" ]]; then
+            echo "No healthcheck entrypoint declared for apps/${{ matrix.app }}; image build completed."
+            exit 0
+          fi
+          docker run --rm "${{ matrix.image }}:${{ matrix.version }}-${{ matrix.arch }}" bash -lc "${healthcheck}"
+
+  manifest:
+    needs:
+      - detect
+      - build
+    if: github.event_name != 'pull_request' && needs.detect.outputs.manifest_matrix != '{"include":[]}'
+    runs-on: ubuntu-latest
+    env:
+      XGC_CN_REGISTRY: ${{ secrets.XGC_CN_REGISTRY }}
+      XGC_CN_NAMESPACE: ${{ secrets.XGC_CN_NAMESPACE }}
+      XGC_CN_USERNAME: ${{ secrets.XGC_CN_USERNAME }}
+      XGC_CN_PASSWORD: ${{ secrets.XGC_CN_PASSWORD }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.detect.outputs.manifest_matrix) }}
+    steps:
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/login-action@v3
+        if: env.XGC_CN_REGISTRY != '' && env.XGC_CN_NAMESPACE != '' && env.XGC_CN_USERNAME != '' && env.XGC_CN_PASSWORD != ''
+        with:
+          registry: ${{ env.XGC_CN_REGISTRY }}
+          username: ${{ env.XGC_CN_USERNAME }}
+          password: ${{ env.XGC_CN_PASSWORD }}
+      - name: Publish multi-architecture manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          create_manifest() {
+            local image="$1"
+            local target="$2"
+            shift 2
+            local refs=()
+            local arch
+            for arch in "$@"; do
+              refs+=("${image}:${target}-${arch}")
+            done
+            docker buildx imagetools create -t "${image}:${target}" "${refs[@]}"
+          }
+
+          mapfile -t arches < <(jq -r '.[]' <<< '${{ toJson(matrix.arches) }}')
+          create_manifest "${{ matrix.image }}" "${{ matrix.version }}" "${arches[@]}"
+          create_manifest "${{ matrix.image }}" "latest" "${arches[@]}"
+
+          if [[ -n "${XGC_CN_REGISTRY}" && -n "${XGC_CN_NAMESPACE}" && -n "${XGC_CN_USERNAME}" && -n "${XGC_CN_PASSWORD}" ]]; then
+            cn_registry="${XGC_CN_REGISTRY%/}"
+            cn_namespace="${XGC_CN_NAMESPACE#/}"
+            cn_namespace="${cn_namespace%/}"
+            cn_image="${cn_registry}/${cn_namespace}/${{ matrix.app }}"
+            create_manifest "${cn_image}" "${{ matrix.version }}" "${arches[@]}"
+            create_manifest "${cn_image}" "latest" "${arches[@]}"
+          fi
+
+  mirror:
+    needs: detect
+    if: needs.detect.outputs.mirror_matrix != '{"include":[]}'
+    runs-on: ubuntu-latest
+    env:
+      XGC_CN_REGISTRY: ${{ secrets.XGC_CN_REGISTRY }}
+      XGC_CN_NAMESPACE: ${{ secrets.XGC_CN_NAMESPACE }}
+      XGC_CN_USERNAME: ${{ secrets.XGC_CN_USERNAME }}
+      XGC_CN_PASSWORD: ${{ secrets.XGC_CN_PASSWORD }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.detect.outputs.mirror_matrix) }}
+    steps:
+      - uses: docker/login-action@v3
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/login-action@v3
+        if: github.event_name != 'pull_request' && env.XGC_CN_REGISTRY != '' && env.XGC_CN_NAMESPACE != '' && env.XGC_CN_USERNAME != '' && env.XGC_CN_PASSWORD != ''
+        with:
+          registry: ${{ env.XGC_CN_REGISTRY }}
+          username: ${{ env.XGC_CN_USERNAME }}
+          password: ${{ env.XGC_CN_PASSWORD }}
+      - name: Mirror external image
+        shell: bash
+        run: |
+          set -euo pipefail
+
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends skopeo
-          source_image="${{ steps.meta.outputs.source_image }}"
+
+          source_image="${{ matrix.source_image }}"
           if [[ -z "${source_image}" ]]; then
             echo "No source image configured for apps/${{ matrix.app }}" >&2
             exit 1
           fi
+
           source_manifest="$(docker manifest inspect -v "${source_image}")"
           printf '%s\n' "${source_manifest}"
-          IFS=',' read -ra required_platforms <<<"${{ steps.meta.outputs.platforms }}"
-          for platform in "${required_platforms[@]}"; do
-            arch="${platform#linux/}"
+          mapfile -t required_arches < <(jq -r '.[]' <<< '${{ toJson(matrix.architectures) }}')
+          for arch_spec in "${required_arches[@]}"; do
+            arch="${arch_spec#linux/}"
             variant=""
             if [[ "${arch}" == */* ]]; then
               variant="${arch#*/}"
               arch="${arch%%/*}"
             fi
             if ! grep -q "\"architecture\": \"${arch}\"" <<<"${source_manifest}"; then
-              echo "Source image ${source_image} does not expose ${platform}" >&2
+              echo "Source image ${source_image} does not expose ${arch_spec}" >&2
               exit 1
             fi
             if [[ -n "${variant}" ]] && ! grep -q "\"variant\": \"${variant}\"" <<<"${source_manifest}"; then
-              echo "Source image ${source_image} does not expose ${platform}" >&2
+              echo "Source image ${source_image} does not expose ${arch_spec}" >&2
               exit 1
             fi
           done
+
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             echo "External source image is reachable: ${source_image}"
             exit 0
           fi
+
+          tags="${{ matrix.image }}:${{ matrix.version }}"$'\n'"${{ matrix.image }}:latest"
+          if [[ -n "${XGC_CN_REGISTRY}" && -n "${XGC_CN_NAMESPACE}" && -n "${XGC_CN_USERNAME}" && -n "${XGC_CN_PASSWORD}" ]]; then
+            cn_registry="${XGC_CN_REGISTRY%/}"
+            cn_namespace="${XGC_CN_NAMESPACE#/}"
+            cn_namespace="${cn_namespace%/}"
+            cn_image="${cn_registry}/${cn_namespace}/${{ matrix.app }}"
+            tags="${tags}"$'\n'"${cn_image}:${{ matrix.version }}"$'\n'"${cn_image}:latest"
+          fi
+
           while IFS= read -r tag; do
             [[ -z "${tag}" ]] && continue
-            if [[ "${{ steps.meta.outputs.multiarch }}" == "true" ]]; then
-              timeout 45m skopeo copy \
-                --all \
-                --authfile "${HOME}/.docker/config.json" \
-                "docker://${source_image}" \
-                "docker://${tag}"
-            else
-              platform="${{ steps.meta.outputs.platforms }}"
-              arch="${platform#linux/}"
-              variant=""
-              if [[ "${arch}" == */* ]]; then
-                variant="${arch#*/}"
-                arch="${arch%%/*}"
-              fi
-              args=(--authfile "${HOME}/.docker/config.json" --override-os linux --override-arch "${arch}")
-              if [[ -n "${variant}" ]]; then
-                args+=(--override-variant "${variant}")
-              fi
-              timeout 30m skopeo copy \
-                "${args[@]}" \
-                "docker://${source_image}" \
-                "docker://${tag}"
-            fi
-            target_manifest="$(docker manifest inspect -v "${tag}")"
-            for platform in "${required_platforms[@]}"; do
-              arch="${platform#linux/}"
-              variant=""
-              if [[ "${arch}" == */* ]]; then
-                variant="${arch#*/}"
-                arch="${arch%%/*}"
-              fi
-              if ! grep -q "\"architecture\": \"${arch}\"" <<<"${target_manifest}"; then
-                echo "Mirrored image ${tag} does not expose ${platform}" >&2
-                exit 1
-              fi
-              if [[ -n "${variant}" ]] && ! grep -q "\"variant\": \"${variant}\"" <<<"${target_manifest}"; then
-                echo "Mirrored image ${tag} does not expose ${platform}" >&2
-                exit 1
-              fi
-            done
-          done <<'EOF'
-          ${{ steps.meta.outputs.tags }}
-          EOF
-      - name: Smoke image
-        if: github.event_name == 'pull_request' && steps.meta.outputs.buildable == 'true'
-        shell: bash
-        run: |
-          healthcheck="$(ruby -ryaml -e 'doc = YAML.safe_load_file(ARGV[0]); puts doc.dig("entrypoints", "healthcheck").to_s' "apps/${{ matrix.app }}/app.yml")"
-          if [[ -z "${healthcheck}" ]]; then
-            echo "No healthcheck entrypoint declared for apps/${{ matrix.app }}; image build completed."
-            exit 0
-          fi
-          docker run --rm "${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}" bash -lc "${healthcheck}"
-      - name: Skip external image app
-        if: steps.meta.outputs.buildable == 'false'
-        run: |
-          echo "apps/${{ matrix.app }} has no Dockerfile; mirrored upstream image ${{ steps.meta.outputs.source_image }}."
+            timeout 45m skopeo copy \
+              --all \
+              --authfile "${HOME}/.docker/config.json" \
+              "docker://${source_image}" \
+              "docker://${tag}"
+          done <<<"${tags}"

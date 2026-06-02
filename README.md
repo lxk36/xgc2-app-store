@@ -16,7 +16,8 @@ App categories are intentionally limited to three operator-facing types:
 
 | App | Type | Image | Purpose |
 | --- | --- | --- | --- |
-| `xgc-ros1-runtime` | `simulation` | `ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime` | Curated ROS Noetic simulation toolkit for ROS1, MAVROS, VRPN, Gazebo Classic and core robot visualization. |
+| `xgc-ros1-runtime` | `simulation` | `ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime` | Curated multi-architecture ROS Noetic simulation toolkit for ROS1, MAVROS, VRPN, Gazebo Classic and core robot visualization. |
+| `xgc1-focal-noetic-qt-builder` | `development` | `ghcr.io/lxk36/xgc2-app-store/xgc1-focal-noetic-qt-builder` | Multi-architecture XGC1 packaging image with ROS Noetic dependencies and source-built Qt 5.15.2. |
 | `px4-sitl-gazebo` | `simulation` | `ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo` | PX4 software-in-the-loop simulation toolkit for Gazebo Classic and ROS Noetic. |
 | `gazebo-harmonic-ros2` | `simulation` | `ghcr.io/lxk36/xgc2-app-store/gazebo-harmonic-ros2` | Gazebo Harmonic with ROS 2 Jazzy integration. |
 | `px4-ros2-sitl-qgc` | `simulation` | `ghcr.io/lxk36/xgc2-app-store/px4-ros2-sitl-qgc` | PX4 ROS 2 SITL image with Micro XRCE-DDS Agent and QGroundControl AppImage included. |
@@ -55,12 +56,24 @@ Deleting an `apps/<app-key>/` directory is detected and reported by CI, but
 registry tag deletion is intentionally not automated. Remove old image tags
 manually after confirming no deployment still references them.
 
-For pull requests, CI builds changed images without pushing. For `master`, CI
-always pushes:
+For buildable apps, CI uses native GitHub-hosted runners for each architecture:
+`ubuntu-latest` for amd64 and `ubuntu-24.04-arm` for arm64. QEMU is not used for
+the production image build path. For pull requests, CI builds changed images
+without pushing. For `master`, CI always pushes:
 
 ```text
 ghcr.io/lxk36/xgc2-app-store/<app-key>:latest
 ghcr.io/lxk36/xgc2-app-store/<app-key>:<version>
+```
+
+Multi-architecture buildable apps also push architecture tags before manifest
+assembly:
+
+```text
+ghcr.io/lxk36/xgc2-app-store/<app-key>:latest-amd64
+ghcr.io/lxk36/xgc2-app-store/<app-key>:latest-arm64
+ghcr.io/lxk36/xgc2-app-store/<app-key>:<version>-amd64
+ghcr.io/lxk36/xgc2-app-store/<app-key>:<version>-arm64
 ```
 
 If domestic registry secrets are configured, CI also pushes the same image tags

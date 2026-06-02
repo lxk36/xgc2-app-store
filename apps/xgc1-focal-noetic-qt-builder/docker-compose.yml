@@ -1,0 +1,13 @@
+services:
+  xgc1-focal-noetic-qt-builder:
+    image: ghcr.io/lxk36/xgc2-app-store/xgc1-focal-noetic-qt-builder:1.0.0
+    container_name: ${CONTAINER_NAME}
+    stdin_open: true
+    tty: true
+    command: ["bash"]
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/xgc1-qt-builder-healthcheck"]
+      interval: 1m
+      timeout: 30s
+      retries: 2
+      start_period: 30s

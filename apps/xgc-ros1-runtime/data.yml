@@ -10,7 +10,7 @@ additionalProperties:
     - Gazebo Classic
   shortDescEn: ROS Noetic, MAVROS, VRPN, Gazebo Classic and common simulation tools.
   description:
-    en: Curated ROS Noetic toolkit for robot simulation workflows without desktop application bundles.
+    en: Curated multi-architecture ROS Noetic toolkit for robot simulation workflows without desktop application bundles.
   type: simulation
   crossVersionUpdate: true
   limit: 0
@@ -19,6 +19,7 @@ additionalProperties:
   document: https://github.com/lxk36/xgc2-app-store/tree/master/apps/xgc-ros1-runtime
   architectures:
     - amd64
+    - arm64/v8
   batchInstallSupport: true
   formFields:
     - default: xgc-ros1-runtime
