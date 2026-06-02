@@ -1,6 +1,6 @@
 services:
   xgc1-focal-noetic-qt-builder:
-    image: ghcr.io/lxk36/xgc2-app-store/xgc1-focal-noetic-qt-builder:1.0.2
+    image: ghcr.io/lxk36/xgc2-app-store/xgc1-focal-noetic-qt-builder:1.0.3
     container_name: ${CONTAINER_NAME}
     stdin_open: true
     tty: true

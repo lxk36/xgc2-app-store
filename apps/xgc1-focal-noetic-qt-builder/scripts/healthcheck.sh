@@ -11,6 +11,7 @@ source /opt/ros/noetic/setup.bash
 test "$(rosversion -d)" = "noetic"
 test "$(qmake -query QT_VERSION)" = "5.15.2"
 test -f "${qt_prefix}/lib/libQt5Widgets.so.5"
+test -f "${qt_prefix}/plugins/platforms/libqxcb.so"
 pkg-config --modversion Qt5Widgets | grep -qx '5\.15\.2'
 
 tmp_dir="$(mktemp -d)"

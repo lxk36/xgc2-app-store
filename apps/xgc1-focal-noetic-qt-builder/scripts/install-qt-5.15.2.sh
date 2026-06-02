@@ -42,6 +42,7 @@ apt-get install -y --no-install-recommends \
   libssh2-1-dev \
   libudev-dev \
   libx11-xcb-dev \
+  libxcb1-dev \
   libxcb-cursor-dev \
   libxcb-icccm4-dev \
   libxcb-image0-dev \
@@ -51,6 +52,7 @@ apt-get install -y --no-install-recommends \
   libxcb-shape0-dev \
   libxcb-shm0-dev \
   libxcb-sync-dev \
+  libxcb-util-dev \
   libxcb-xfixes0-dev \
   libxcb-xinerama0-dev \
   libxcb-xkb-dev \
@@ -92,6 +94,7 @@ cd qt-everywhere-src-5.15.2
   -opensource \
   -confirm-license \
   -release \
+  -xcb \
   -nomake examples \
   -nomake tests \
   -skip qtactiveqt \
