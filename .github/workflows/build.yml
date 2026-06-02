@@ -79,7 +79,20 @@ jobs:
           manifest = []
           dependent_manifest = []
 
-          apps.each do |app|
+          expanded_apps = apps.dup
+          seen = expanded_apps.to_h { |app| [app, true] }
+          expanded_apps.each do |app|
+            app_file = "apps/#{app}/app.yml"
+            next unless File.exist?(app_file)
+
+            dependency = YAML.safe_load_file(app_file)["dependsOnApp"]
+            next if dependency.nil? || dependency.empty? || seen[dependency]
+
+            expanded_apps << dependency
+            seen[dependency] = true
+          end
+
+          expanded_apps.each do |app|
             app_file = "apps/#{app}/app.yml"
             raise "missing #{app_file}" unless File.exist?(app_file)
 
