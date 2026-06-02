@@ -9,7 +9,7 @@ ENV ROS_DISTRO=noetic
 ENV XGC1_QT_PREFIX=/opt/xgc1/toolchains/qt/5.15.2
 ENV QT_PATH=/opt/xgc1/toolchains/qt/5.15.2
 ENV PATH=/opt/xgc1/toolchains/qt/5.15.2/bin:${PATH}
-ENV LD_LIBRARY_PATH=/opt/xgc1/toolchains/qt/5.15.2/lib:${LD_LIBRARY_PATH}
+ENV LD_LIBRARY_PATH=/opt/xgc1/toolchains/qt/5.15.2/lib
 ENV QT_PLUGIN_PATH=/opt/xgc1/toolchains/qt/5.15.2/plugins
 ENV CMAKE_PREFIX_PATH=/opt/ros/noetic:/opt/xgc1/toolchains/qt/5.15.2
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]

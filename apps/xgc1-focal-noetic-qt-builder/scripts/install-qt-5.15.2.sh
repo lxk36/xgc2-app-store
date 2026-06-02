@@ -93,8 +93,38 @@ cd qt-everywhere-src-5.15.2
   -release \
   -nomake examples \
   -nomake tests \
+  -skip qtactiveqt \
+  -skip qtandroidextras \
+  -skip qtcanvas3d \
+  -skip qtconnectivity \
+  -skip qtdeclarative \
+  -skip qtdoc \
+  -skip qtgraphicaleffects \
+  -skip qtimageformats \
+  -skip qtlocation \
+  -skip qtmacextras \
+  -skip qtmultimedia \
+  -skip qtnetworkauth \
+  -skip qtquickcontrols \
+  -skip qtquickcontrols2 \
+  -skip qtquicktimeline \
+  -skip qtremoteobjects \
+  -skip qtscript \
+  -skip qtscxml \
+  -skip qtsensors \
+  -skip qtserialbus \
+  -skip qtserialport \
+  -skip qtspeech \
+  -skip qttools \
+  -skip qttranslations \
+  -skip qtwebchannel \
   -skip qtwebengine \
+  -skip qtwebglplugin \
+  -skip qtwebsockets \
   -skip qtwayland \
+  -skip qtwinextras \
+  -skip qtx11extras \
+  -skip qtxmlpatterns \
   -skip qt3d \
   -skip qtcharts \
   -skip qtdatavis3d \
