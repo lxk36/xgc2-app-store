@@ -39,6 +39,7 @@ apt-get install -y --no-install-recommends \
   libnss3-dev \
   libpci-dev \
   libpulse-dev \
+  libssh2-1-dev \
   libudev-dev \
   libx11-xcb-dev \
   libxcb-cursor-dev \
