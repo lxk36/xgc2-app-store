@@ -3,6 +3,7 @@ set -euo pipefail
 
 source /opt/ros/noetic/setup.bash
 test "$(rosversion -d)" = "noetic"
+test "${DISABLE_ROS1_EOL_WARNINGS:-}" = "1"
 command -v roscore >/dev/null
 rviz --help >/dev/null
 command -v gazebo >/dev/null

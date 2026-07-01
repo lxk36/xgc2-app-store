@@ -2,6 +2,7 @@
 set -e
 
 source /opt/ros/noetic/setup.bash
+export DISABLE_ROS1_EOL_WARNINGS="${DISABLE_ROS1_EOL_WARNINGS:-1}"
 
 if [[ -n "${ROS_IP:-}" ]]; then
   export ROS_IP

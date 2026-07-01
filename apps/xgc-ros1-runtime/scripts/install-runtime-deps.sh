@@ -48,4 +48,16 @@ if [[ -x "/opt/ros/${rosdistro}/lib/mavros/install_geographiclib_datasets.sh" ]]
   /opt/ros/${rosdistro}/lib/mavros/install_geographiclib_datasets.sh || true
 fi
 
-echo "source /opt/ros/${rosdistro}/setup.bash" >/etc/profile.d/xgc-ros1.sh
+cat >/etc/profile.d/xgc-ros1.sh <<EOF
+. /opt/ros/${rosdistro}/setup.sh
+export DISABLE_ROS1_EOL_WARNINGS=1
+EOF
+
+if ! grep -q '/etc/profile.d/xgc-ros1.sh' /root/.bashrc 2>/dev/null; then
+  cat >>/root/.bashrc <<'EOF'
+
+if [ -f /etc/profile.d/xgc-ros1.sh ]; then
+  . /etc/profile.d/xgc-ros1.sh
+fi
+EOF
+fi
