@@ -12,12 +12,19 @@ apt-get update
 apt-get install -y --no-install-recommends \
   bc \
   ca-certificates \
+  gdb \
+  git \
   iputils-ping \
   libgazebo11-dev \
+  libgoogle-glog-dev \
+  libyaml-cpp-dev \
   libzmqpp-dev \
+  mesa-utils \
   netbase \
   python-is-python3 \
+  python3-catkin-tools \
   python3-pip \
+  python3-vcstool \
   wget \
   xmlstarlet \
   gazebo11 \
