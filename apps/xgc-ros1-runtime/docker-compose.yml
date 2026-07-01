@@ -6,6 +6,7 @@ services:
     network_mode: host
     restart: unless-stopped
     environment:
+      DISABLE_ROS1_EOL_WARNINGS: "1"
       DISPLAY: ${DISPLAY:-}
       XAUTHORITY: ${XAUTHORITY:-}
       ROS_MASTER_URI: ${ROS_MASTER_URI}
@@ -22,7 +23,7 @@ services:
       - ${XGC_HOST_WORKSPACE_DIR}/${XGC_DOCUMENTS}:/home/xgc_documents
     stdin_open: true
     tty: true
-    command: ["bash", "-lc", "source /opt/ros/noetic/setup.bash && sleep infinity"]
+    command: ["bash", "-lc", ". /etc/profile.d/xgc-ros1.sh && sleep infinity"]
     healthcheck:
       test: ["CMD", "/usr/local/bin/xgc-ros1-healthcheck"]
       interval: 30s

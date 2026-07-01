@@ -150,4 +150,5 @@ export PATH="${qt_prefix}/bin:\${PATH}"
 export LD_LIBRARY_PATH="${qt_prefix}/lib:\${LD_LIBRARY_PATH:-}"
 export QT_PLUGIN_PATH="${qt_prefix}/plugins"
 export CMAKE_PREFIX_PATH="/opt/ros/noetic:${qt_prefix}:\${CMAKE_PREFIX_PATH:-}"
+export DISABLE_ROS1_EOL_WARNINGS=1
 EOF

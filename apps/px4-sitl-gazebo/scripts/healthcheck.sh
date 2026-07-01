@@ -2,6 +2,7 @@
 set -euo pipefail
 
 source /opt/ros/noetic/setup.bash
+test "${DISABLE_ROS1_EOL_WARNINGS:-}" = "1"
 rosversion -d >/dev/null
 gazebo --version >/dev/null
 test -d "${PX4_AUTOPILOT_HOME:-/root/PX4-Autopilot}"

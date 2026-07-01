@@ -16,9 +16,9 @@ apps:
       - Gazebo Classic
   - key: xgc1-focal-noetic-qt-builder
     name: XGC1 Focal Noetic Qt Builder
-    version: 1.0.0
+    version: 1.0.4
     type: development
-    image: ghcr.io/lxk36/xgc2-app-store/xgc1-focal-noetic-qt-builder:1.0.0
+    image: ghcr.io/lxk36/xgc2-app-store/xgc1-focal-noetic-qt-builder:1.0.4
     app: ../apps/xgc1-focal-noetic-qt-builder/app.yml
     data: ../apps/xgc1-focal-noetic-qt-builder/data.yml
     compose: ../apps/xgc1-focal-noetic-qt-builder/docker-compose.yml
@@ -28,9 +28,9 @@ apps:
       - XGC1
   - key: px4-sitl-gazebo
     name: PX4 SITL Gazebo
-    version: 1.0.3
+    version: 1.0.4
     type: simulation
-    image: ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo:1.0.3
+    image: ghcr.io/lxk36/xgc2-app-store/px4-sitl-gazebo:1.0.4
     app: ../apps/px4-sitl-gazebo/app.yml
     data: ../apps/px4-sitl-gazebo/data.yml
     compose: ../apps/px4-sitl-gazebo/docker-compose.yml

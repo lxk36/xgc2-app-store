@@ -6,6 +6,7 @@ services:
     network_mode: host
     restart: unless-stopped
     environment:
+      DISABLE_ROS1_EOL_WARNINGS: "1"
       DISPLAY: ${DISPLAY:-}
       XAUTHORITY: ${XAUTHORITY:-}
       PX4_AUTOPILOT_HOME: /root/PX4-Autopilot
@@ -19,7 +20,7 @@ services:
       - ${XGC_HOST_WORKSPACE_DIR}/${PX4_LOG_DIR}:/var/log/px4_sitl
     stdin_open: true
     tty: true
-    command: ["bash", "-lc", "source /opt/ros/noetic/setup.bash && sleep infinity"]
+    command: ["bash", "-lc", ". /etc/profile.d/px4-sitl-ros1.sh && sleep infinity"]
     healthcheck:
       test: ["CMD", "/usr/local/bin/px4-sitl-healthcheck"]
       interval: 30s

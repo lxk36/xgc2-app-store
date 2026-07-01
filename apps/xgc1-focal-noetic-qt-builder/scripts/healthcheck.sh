@@ -9,6 +9,7 @@ export CMAKE_PREFIX_PATH="/opt/ros/noetic:${qt_prefix}:${CMAKE_PREFIX_PATH:-}"
 
 source /opt/ros/noetic/setup.bash
 test "$(rosversion -d)" = "noetic"
+test "${DISABLE_ROS1_EOL_WARNINGS:-}" = "1"
 test "$(qmake -query QT_VERSION)" = "5.15.2"
 test -f "${qt_prefix}/lib/libQt5Widgets.so.5"
 test -f "${qt_prefix}/plugins/platforms/libqxcb.so"

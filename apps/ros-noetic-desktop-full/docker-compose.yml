@@ -14,4 +14,4 @@ services:
       - ${XGC_HOST_WORKSPACE_DIR}/${ROS_WORKSPACE}:/home/ros_ws
     stdin_open: true
     tty: true
-    command: ["bash", "-lc", "source /opt/ros/noetic/setup.bash && sleep infinity"]
+    command: ["bash", "-lc", "export DISABLE_ROS1_EOL_WARNINGS=1; source /opt/ros/noetic/setup.bash && sleep infinity"]

@@ -48,3 +48,17 @@ python3 -m pip install --no-cache-dir \
 if [[ -x "/opt/ros/${rosdistro}/lib/mavros/install_geographiclib_datasets.sh" ]]; then
   /opt/ros/${rosdistro}/lib/mavros/install_geographiclib_datasets.sh || true
 fi
+
+cat >/etc/profile.d/px4-sitl-ros1.sh <<EOF
+. /opt/ros/${rosdistro}/setup.sh
+export DISABLE_ROS1_EOL_WARNINGS=1
+EOF
+
+if ! grep -q '/etc/profile.d/px4-sitl-ros1.sh' /root/.bashrc 2>/dev/null; then
+  cat >>/root/.bashrc <<'EOF'
+
+if [ -f /etc/profile.d/px4-sitl-ros1.sh ]; then
+  . /etc/profile.d/px4-sitl-ros1.sh
+fi
+EOF
+fi
