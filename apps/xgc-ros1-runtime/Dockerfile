@@ -6,6 +6,7 @@ LABEL org.opencontainers.image.source="https://github.com/lxk36/xgc2-app-store"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ROS_DISTRO=noetic
+ENV DISABLE_ROS1_EOL_WARNINGS=1
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 COPY scripts/install-runtime-deps.sh /tmp/install-runtime-deps.sh

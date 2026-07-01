@@ -5,6 +5,7 @@ services:
     network_mode: host
     restart: unless-stopped
     environment:
+      DISABLE_ROS1_EOL_WARNINGS: "1"
       DISPLAY: ${DISPLAY:-}
       XAUTHORITY: ${XAUTHORITY:-}
       ROS_WORKSPACE: ${ROS_WORKSPACE}

@@ -6,6 +6,7 @@ LABEL org.opencontainers.image.source="https://github.com/lxk36/xgc2-app-store"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ROS_DISTRO=noetic
+ENV DISABLE_ROS1_EOL_WARNINGS=1
 ENV PX4_AUTOPILOT_HOME=/root/PX4-Autopilot
 ENV PX4_SITL_HOME=/root/PX4-Autopilot
 ENV PATH=/root/.local/bin:${PATH}
