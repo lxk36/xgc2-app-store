@@ -76,6 +76,18 @@ additionalProperties:
         en: Simulation log directory under XGC host workspace
       required: true
       type: text
+    - default: XGC/Run/central-sim/processes
+      envKey: PROCESS_STATE_DIR
+      label:
+        en: Supervised process state directory under XGC host workspace
+      required: true
+      type: text
+    - default: XGC/Logs/central-sim/processes
+      envKey: PROCESS_LOG_DIR
+      label:
+        en: Supervised process log directory under XGC host workspace
+      required: true
+      type: text
     - default: XGC/Config/qgroundcontrol-4.4.4
       envKey: QGC_DATA_DIR
       label:

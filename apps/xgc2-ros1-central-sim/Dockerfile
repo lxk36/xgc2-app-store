@@ -1,3 +1,9 @@
+FROM golang:1.26-bookworm AS execution-runner-build
+
+WORKDIR /src
+COPY scripts/xgc-process-runner.go /src/xgc-process-runner.go
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/xgc-process-runner /src/xgc-process-runner.go
+
 FROM ghcr.io/lxk36/xgc2-app-store/xgc-ros1-runtime:1.2.3
 
 LABEL org.opencontainers.image.title="XGC2 ROS1 Central Simulation"
@@ -44,16 +50,22 @@ COPY scripts/entrypoint.sh /usr/local/bin/xgc2-central-sim-entrypoint
 COPY scripts/healthcheck.sh /usr/local/bin/xgc2-central-sim-healthcheck
 COPY scripts/smoke-simulation.sh /usr/local/bin/xgc2-central-sim-smoke
 COPY scripts/qgroundcontrol.sh /usr/local/bin/qgroundcontrol
+COPY scripts/xgc-process-launcher /usr/local/bin/xgc-process-launcher
+COPY --from=execution-runner-build /out/xgc-process-runner /usr/local/bin/xgc-process-runner
 
 RUN chmod +x \
       /usr/local/bin/xgc2-central-sim-entrypoint \
       /usr/local/bin/xgc2-central-sim-healthcheck \
       /usr/local/bin/xgc2-central-sim-smoke \
+      /usr/local/bin/xgc-process-launcher \
+      /usr/local/bin/xgc-process-runner \
       /usr/local/bin/qgroundcontrol \
     && /usr/local/bin/xgc2-central-sim-healthcheck
 
 RUN mkdir -p \
       "${XGC2_SIM_LOG_DIR}" \
+      /run/xgc/processes \
+      /var/log/xgc/processes \
       /home/xgc_ws \
       /var/lib/xgc2/qgroundcontrol/config \
       /var/lib/xgc2/qgroundcontrol/cache

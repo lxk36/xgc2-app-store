@@ -44,10 +44,14 @@ install -d -o "${uid}" -g "${gid}" -m 0755 \
   "${home}" \
   /home/xgc_ws \
   "${XGC2_SIM_LOG_DIR:-/var/log/xgc2-sim}" \
+  "${XGC_PROCESS_STATE_DIR:-/run/xgc/processes}" \
+  "${XGC_PROCESS_LOG_DIR:-/var/log/xgc/processes}" \
   /var/lib/xgc2/qgroundcontrol/config \
   /var/lib/xgc2/qgroundcontrol/cache
 chown -R "${uid}:${gid}" \
   "${XGC2_SIM_LOG_DIR:-/var/log/xgc2-sim}" \
+  "${XGC_PROCESS_STATE_DIR:-/run/xgc/processes}" \
+  "${XGC_PROCESS_LOG_DIR:-/var/log/xgc/processes}" \
   /var/lib/xgc2/qgroundcontrol
 
 export HOME="${home}"
