@@ -1,0 +1,47 @@
+# XGC2 ROS1 Central Simulation
+
+This app is the immutable ROS Noetic and Gazebo Classic runtime for the first
+XGC2 centralized simulation mode. It runs the shared ROS master, Gazebo server,
+VRPN bridge and all configured FS150 and Scout Mini robots in one disposable
+container.
+
+The image derives from `xgc-ros1-runtime:1.2.3`. XGC2 products are installed
+from `https://xgc2.apt.xiaokang.ink` only while the image is built. Container
+startup never runs `apt update` or installs products.
+
+Exact direct product versions live in `packages.lock`. Change the lock and bump
+the app version whenever the simulation release set changes.
+
+QGroundControl 4.4.4 is downloaded with a pinned SHA-256 and extracted while the
+image is built. Runtime execution uses the extracted `AppRun` tree and never
+requires FUSE inside the container. QGC configuration and cache data use a
+dedicated persistent volume, while the simulation container remains disposable.
+
+Run QGroundControl after the container starts with:
+
+```bash
+qgroundcontrol
+```
+
+Set `HOST_XAUTHORITY` to the current desktop session's Xauthority file and set
+`USER_UID`/`USER_GID` to the desktop user's IDs. The compose file mounts that
+file read-only and QGC runs as the matching non-root user.
+
+Set `QGC_FORCE_SOFTWARE_OPENGL=1` only when the host GPU/driver combination
+cannot render QGC correctly through the container.
+
+PX4 1.14, product source trees and build toolchains are intentionally excluded.
+
+## Local build
+
+```bash
+docker build -t xgc2-ros1-central-sim:local .
+docker run --rm xgc2-ros1-central-sim:local \
+  /usr/local/bin/xgc2-central-sim-healthcheck
+docker run --rm xgc2-ros1-central-sim:local \
+  /usr/local/bin/xgc2-central-sim-smoke
+```
+
+The repository build workflow pushes versioned and `latest` tags to GHCR. When
+all domestic-registry secrets are configured, the same workflow also pushes
+the same tags to the configured domestic registry.

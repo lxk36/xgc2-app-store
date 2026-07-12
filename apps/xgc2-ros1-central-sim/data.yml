@@ -1,0 +1,84 @@
+name: XGC2 ROS1 Central Simulation
+title: FS150 and Scout Mini central simulation runtime
+additionalProperties:
+  key: xgc2-ros1-central-sim
+  name: XGC2 ROS1 Central Simulation
+  tags:
+    - Noetic
+    - Gazebo Classic
+    - FS150
+    - Scout Mini
+    - QGroundControl
+  shortDescEn: Reproducible central simulation image for FS150 and Scout Mini fleets with QGroundControl 4.4.4.
+  description:
+    en: Version-locked ROS Noetic and Gazebo Classic runtime with XGC2 FS150, PX4 1.12, Scout Mini, shared worlds, VRPN, visualization products and an extracted QGroundControl 4.4.4 runtime preinstalled.
+  type: simulation
+  crossVersionUpdate: true
+  limit: 0
+  website: https://xgc2.apt.xiaokang.ink
+  github: https://github.com/lxk36/xgc2-app-store
+  document: https://github.com/lxk36/xgc2-app-store/tree/master/apps/xgc2-ros1-central-sim
+  architectures:
+    - amd64
+  batchInstallSupport: true
+  formFields:
+    - default: xgc2-ros1-central-sim
+      envKey: CONTAINER_NAME
+      label:
+        en: Container name
+      required: true
+      type: text
+    - default: xgc
+      envKey: XGC_USER
+      label:
+        en: Runtime user name
+      required: true
+      type: text
+    - default: "1000"
+      envKey: USER_UID
+      label:
+        en: Runtime user UID
+      required: true
+      type: number
+    - default: "1000"
+      envKey: USER_GID
+      label:
+        en: Runtime user GID
+      required: true
+      type: number
+    - default: /run/user/1000/gdm/Xauthority
+      envKey: HOST_XAUTHORITY
+      label:
+        en: Host Xauthority file
+      required: true
+      type: text
+    - default: http://127.0.0.1:11311
+      envKey: ROS_MASTER_URI
+      label:
+        en: ROS master URI
+      required: true
+      type: text
+    - default: 127.0.0.1
+      envKey: ROS_IP
+      label:
+        en: ROS IP
+      required: true
+      type: text
+    - default: xgc2-central-sim
+      envKey: SIM_WORKSPACE
+      label:
+        en: Simulation workspace directory under XGC host workspace
+      required: true
+      type: text
+    - default: XGC/Logs/central-sim
+      envKey: SIM_LOG_DIR
+      label:
+        en: Simulation log directory under XGC host workspace
+      required: true
+      type: text
+    - default: XGC/Config/qgroundcontrol-4.4.4
+      envKey: QGC_DATA_DIR
+      label:
+        en: QGroundControl data directory under XGC host workspace
+      required: true
+      type: text

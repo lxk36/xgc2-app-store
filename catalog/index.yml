@@ -1,5 +1,5 @@
 name: XGC2 App Store
-updatedAt: 2026-05-08
+updatedAt: "2026-07-12"
 apps:
   - key: xgc-ros1-runtime
     name: ROS1 Simulation Kit
@@ -14,6 +14,20 @@ apps:
       - MAVROS
       - VRPN
       - Gazebo Classic
+  - key: xgc2-ros1-central-sim
+    name: XGC2 ROS1 Central Simulation
+    version: 1.0.0
+    type: simulation
+    image: ghcr.io/lxk36/xgc2-app-store/xgc2-ros1-central-sim:1.0.0
+    app: ../apps/xgc2-ros1-central-sim/app.yml
+    data: ../apps/xgc2-ros1-central-sim/data.yml
+    compose: ../apps/xgc2-ros1-central-sim/docker-compose.yml
+    tags:
+      - Noetic
+      - Gazebo Classic
+      - FS150
+      - Scout Mini
+      - QGroundControl
   - key: xgc1-focal-noetic-qt-builder
     name: XGC1 Focal Noetic Qt Builder
     version: 1.0.4

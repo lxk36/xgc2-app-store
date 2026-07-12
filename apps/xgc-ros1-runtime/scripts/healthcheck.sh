@@ -5,7 +5,7 @@ source /opt/ros/noetic/setup.bash
 test "$(rosversion -d)" = "noetic"
 test "${DISABLE_ROS1_EOL_WARNINGS:-}" = "1"
 command -v roscore >/dev/null
-rviz --help >/dev/null
+command -v rviz >/dev/null
 command -v gazebo >/dev/null
 command -v git >/dev/null
 command -v gdb >/dev/null
