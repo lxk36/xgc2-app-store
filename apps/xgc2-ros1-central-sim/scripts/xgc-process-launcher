@@ -1,0 +1,166 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+state_root="${XGC_PROCESS_STATE_DIR:-/run/xgc/processes}"
+log_root="${XGC_PROCESS_LOG_DIR:-/var/log/xgc/processes}"
+
+die() {
+  printf 'xgc-process-launcher: %s\n' "$*" >&2
+  exit 2
+}
+
+valid_id() {
+  [[ "$1" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$ ]]
+}
+
+valid_digest() {
+  [[ "$1" =~ ^[a-fA-F0-9]{64}$ ]]
+}
+
+process_start_ticks() {
+  local pid="$1" stat rest
+  [[ -r "/proc/${pid}/stat" ]] || return 1
+  IFS= read -r stat <"/proc/${pid}/stat"
+  rest="${stat##*) }"
+  local -a fields=()
+  read -r -a fields <<<"${rest}"
+  [[ "${#fields[@]}" -gt 19 ]] || return 1
+  [[ "${fields[0]}" != "Z" ]] || return 1
+  printf '%s\n' "${fields[19]}"
+}
+
+json_number() {
+  local key="$1" file="$2"
+  sed -nE "s/.*\"${key}\":([0-9]+).*/\\1/p" "${file}" | head -n1
+}
+
+json_string() {
+  local key="$1" file="$2"
+  sed -nE "s/.*\"${key}\":\"([^\"]*)\".*/\\1/p" "${file}" | head -n1
+}
+
+write_handle() {
+  local file="$1" pid="$2" pgid="$3" ticks="$4" generation="$5" digest="$6" tmp
+  tmp="${file}.tmp.$$"
+  printf '{"pid":%s,"pgid":%s,"startTicks":%s,"generation":%s,"definitionDigest":"%s"}\n' \
+    "${pid}" "${pgid}" "${ticks}" "${generation}" "${digest}" >"${tmp}"
+  chmod 0600 "${tmp}"
+  mv -f "${tmp}" "${file}"
+}
+
+print_status() {
+  local running="$1" reason="$2" pid="$3" pgid="$4" ticks="$5" generation="$6" digest="$7" exit_code="${8:-}"
+  [[ "${exit_code}" =~ ^[0-9]+$ ]] || exit_code="null"
+  printf '{"running":%s,"pid":%s,"pgid":%s,"startTicks":%s,"generation":%s,"definitionDigest":"%s","reason":"%s","exitCode":%s}\n' \
+    "${running}" "${pid:-0}" "${pgid:-0}" "${ticks:-0}" "${generation:-0}" "${digest}" "${reason}" "${exit_code}"
+}
+
+action="${1:-}"
+[[ -n "${action}" ]] || die "action is required"
+shift
+
+id=""
+generation=""
+digest=""
+expected_ticks=""
+signal_name=""
+stream_name=""
+log_offset=""
+log_limit=""
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    --id) id="${2:-}"; shift 2 ;;
+    --generation) generation="${2:-}"; shift 2 ;;
+    --definition-digest) digest="${2:-}"; shift 2 ;;
+    --start-ticks) expected_ticks="${2:-}"; shift 2 ;;
+    --signal) signal_name="${2:-}"; shift 2 ;;
+    --stream) stream_name="${2:-}"; shift 2 ;;
+    --offset) log_offset="${2:-}"; shift 2 ;;
+    --limit) log_limit="${2:-}"; shift 2 ;;
+    --) shift; break ;;
+    *) die "unknown argument: $1" ;;
+  esac
+done
+
+valid_id "${id}" || die "invalid instance id"
+if [[ "${action}" != "read-log" ]]; then
+  [[ "${generation}" =~ ^[0-9]+$ ]] || die "generation must be an unsigned integer"
+  valid_digest "${digest}" || die "definition digest must be a SHA-256 hex string"
+fi
+
+state_dir="${state_root}/${id}"
+log_dir="${log_root}/${id}"
+handle_file="${state_dir}/handle.json"
+exit_file="${state_dir}/exit.json"
+install -d -m 0750 "${state_dir}" "${log_dir}"
+
+case "${action}" in
+  start)
+    [[ "$#" -gt 0 ]] || die "executable argv is required after --"
+    exec 9>"${state_dir}/lock"
+    flock -n 9 || die "instance is already being changed"
+    if [[ -s "${handle_file}" ]]; then
+      old_pid="$(json_number pid "${handle_file}")"
+      old_ticks="$(json_number startTicks "${handle_file}")"
+      if [[ -n "${old_pid}" && -n "${old_ticks}" ]] && current_ticks="$(process_start_ticks "${old_pid}" 2>/dev/null)" && [[ "${current_ticks}" == "${old_ticks}" ]]; then
+        die "instance is already running"
+      fi
+    fi
+    rm -f "${exit_file}"
+    nohup setsid -- /usr/local/bin/xgc-process-runner run \
+      --log-dir "${log_dir}" --exit-file "${exit_file}" -- "$@" \
+      9>&- >/dev/null 2>>"${log_dir}/runner.log" </dev/null &
+    pid="$!"
+    for _ in {1..50}; do
+      if ticks="$(process_start_ticks "${pid}" 2>/dev/null)"; then
+        break
+      fi
+      sleep 0.01
+    done
+    [[ -n "${ticks:-}" ]] || die "process exited before its handle was captured"
+    pgid="$(ps -o pgid= -p "${pid}" | tr -d '[:space:]')"
+    [[ "${pgid}" =~ ^[0-9]+$ ]] || die "cannot resolve process group"
+    write_handle "${handle_file}" "${pid}" "${pgid}" "${ticks}" "${generation}" "${digest}"
+    cat "${handle_file}"
+    ;;
+
+  inspect|signal)
+    [[ "${expected_ticks}" =~ ^[0-9]+$ ]] || die "start ticks must be an unsigned integer"
+    if [[ ! -s "${handle_file}" ]]; then
+      print_status false missing_handle 0 0 0 "${generation}" "${digest}"
+      exit 0
+    fi
+    pid="$(json_number pid "${handle_file}")"
+    pgid="$(json_number pgid "${handle_file}")"
+    ticks="$(json_number startTicks "${handle_file}")"
+    saved_generation="$(json_number generation "${handle_file}")"
+    saved_digest="$(json_string definitionDigest "${handle_file}")"
+    if [[ -z "${pid}" || -z "${pgid}" || "${ticks}" != "${expected_ticks}" || "${saved_generation}" != "${generation}" || "${saved_digest}" != "${digest}" ]]; then
+      print_status false identity_mismatch "${pid:-0}" "${pgid:-0}" "${ticks:-0}" "${saved_generation:-0}" "${saved_digest:-}"
+      exit 0
+    fi
+    current_ticks="$(process_start_ticks "${pid}" 2>/dev/null || true)"
+    if [[ "${current_ticks}" != "${ticks}" ]]; then
+      exit_code="$(json_number exitCode "${exit_file}" 2>/dev/null || true)"
+      print_status false exited "${pid}" "${pgid}" "${ticks}" "${generation}" "${digest}" "${exit_code}"
+      exit 0
+    fi
+    if [[ "${action}" == "signal" ]]; then
+      [[ "${signal_name}" == "TERM" || "${signal_name}" == "KILL" ]] || die "signal must be TERM or KILL"
+      kill -s "${signal_name}" -- "-${pgid}"
+    fi
+    print_status true ok "${pid}" "${pgid}" "${ticks}" "${generation}" "${digest}"
+    ;;
+
+  read-log)
+    [[ "${stream_name}" == "stdout" || "${stream_name}" == "stderr" ]] || die "stream must be stdout or stderr"
+    [[ "${log_offset}" =~ ^[0-9]+$ ]] || die "offset must be an unsigned integer"
+    [[ "${log_limit}" =~ ^[0-9]+$ ]] || die "limit must be an unsigned integer"
+    (( log_limit >= 1 && log_limit <= 262144 )) || die "limit must be between 1 and 262144"
+    exec /usr/local/bin/xgc-process-runner read \
+      --log-dir "${log_dir}" --stream "${stream_name}" \
+      --offset "${log_offset}" --limit "${log_limit}"
+    ;;
+
+  *) die "unsupported action: ${action}" ;;
+esac

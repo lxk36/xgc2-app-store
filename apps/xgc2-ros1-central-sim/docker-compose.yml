@@ -1,8 +1,7 @@
 services:
   xgc2-ros1-central-sim:
-    image: ghcr.io/lxk36/xgc2-app-store/xgc2-ros1-central-sim:1.0.0
+    image: ghcr.io/lxk36/xgc2-app-store/xgc2-ros1-central-sim:1.1.0
     container_name: ${CONTAINER_NAME}
-    privileged: true
     network_mode: host
     restart: "no"
     stop_grace_period: 20s
@@ -20,14 +19,17 @@ services:
       NVIDIA_VISIBLE_DEVICES: ${NVIDIA_VISIBLE_DEVICES:-all}
       NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES:-all}
       XGC2_SIM_LOG_DIR: /var/log/xgc2-sim
+      XGC_PROCESS_STATE_DIR: /run/xgc/processes
+      XGC_PROCESS_LOG_DIR: /var/log/xgc/processes
       QT_X11_NO_MITSHM: "1"
       QGC_FORCE_SOFTWARE_OPENGL: ${QGC_FORCE_SOFTWARE_OPENGL:-0}
     volumes:
-      - /dev:/dev
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${HOST_XAUTHORITY}:/tmp/.Xauthority:ro
       - ${XGC_HOST_WORKSPACE_DIR}/${SIM_WORKSPACE}:/home/xgc_ws
       - ${XGC_HOST_WORKSPACE_DIR}/${SIM_LOG_DIR}:/var/log/xgc2-sim
+      - ${XGC_HOST_WORKSPACE_DIR}/${PROCESS_STATE_DIR}:/run/xgc/processes
+      - ${XGC_HOST_WORKSPACE_DIR}/${PROCESS_LOG_DIR}:/var/log/xgc/processes
       - ${XGC_HOST_WORKSPACE_DIR}/${QGC_DATA_DIR}:/var/lib/xgc2/qgroundcontrol
     stdin_open: true
     tty: true

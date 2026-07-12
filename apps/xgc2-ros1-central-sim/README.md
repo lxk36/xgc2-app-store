@@ -17,6 +17,11 @@ image is built. Runtime execution uses the extracted `AppRun` tree and never
 requires FUSE inside the container. QGC configuration and cache data use a
 dedicated persistent volume, while the simulation container remains disposable.
 
+The Process Supervisor owns `/run/xgc/processes` and
+`/var/log/xgc/processes`. Both are host-mounted by the catalog compose file so
+Core can validate PID/PGID/start-ticks handles and resume stdout/stderr offsets
+after either Core or the simulation container restarts.
+
 Run QGroundControl after the container starts with:
 
 ```bash
