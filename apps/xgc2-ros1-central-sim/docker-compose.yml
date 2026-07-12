@@ -1,0 +1,40 @@
+services:
+  xgc2-ros1-central-sim:
+    image: ghcr.io/lxk36/xgc2-app-store/xgc2-ros1-central-sim:1.0.0
+    container_name: ${CONTAINER_NAME}
+    privileged: true
+    network_mode: host
+    restart: "no"
+    stop_grace_period: 20s
+    shm_size: 1gb
+    environment:
+      DISABLE_ROS1_EOL_WARNINGS: "1"
+      DISPLAY: ${DISPLAY:-}
+      XAUTHORITY: /tmp/.Xauthority
+      XGC_USER: ${XGC_USER}
+      USER_UID: ${USER_UID}
+      USER_GID: ${USER_GID}
+      ROS_MASTER_URI: ${ROS_MASTER_URI}
+      ROS_IP: ${ROS_IP}
+      ROS_HOSTNAME: ${ROS_HOSTNAME:-}
+      NVIDIA_VISIBLE_DEVICES: ${NVIDIA_VISIBLE_DEVICES:-all}
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES:-all}
+      XGC2_SIM_LOG_DIR: /var/log/xgc2-sim
+      QT_X11_NO_MITSHM: "1"
+      QGC_FORCE_SOFTWARE_OPENGL: ${QGC_FORCE_SOFTWARE_OPENGL:-0}
+    volumes:
+      - /dev:/dev
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${HOST_XAUTHORITY}:/tmp/.Xauthority:ro
+      - ${XGC_HOST_WORKSPACE_DIR}/${SIM_WORKSPACE}:/home/xgc_ws
+      - ${XGC_HOST_WORKSPACE_DIR}/${SIM_LOG_DIR}:/var/log/xgc2-sim
+      - ${XGC_HOST_WORKSPACE_DIR}/${QGC_DATA_DIR}:/var/lib/xgc2/qgroundcontrol
+    stdin_open: true
+    tty: true
+    command: ["bash", "-lc", ". /etc/profile.d/xgc-ros1.sh && sleep infinity"]
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/xgc2-central-sim-healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
